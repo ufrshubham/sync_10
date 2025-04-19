@@ -1,3 +1,5 @@
+import 'package:flame/game.dart';
+import 'package:flame_game_jam_2025/game/game.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,7 +12,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
+      home: GameWidget.controlled(gameFactory: TheSpaceRaceGame.new),
     );
   }
 }
