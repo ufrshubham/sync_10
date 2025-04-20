@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
 import 'package:flame_game_jam_2025/game/world.dart';
-import 'package:flame_tiled/flame_tiled.dart';
 
 class TheSpaceRaceGame extends FlameGame<TheSpaceRaceWorld> {
   TheSpaceRaceGame() : super(world: TheSpaceRaceWorld());
@@ -22,6 +19,14 @@ class TheSpaceRaceGame extends FlameGame<TheSpaceRaceWorld> {
     camera.removeFromParent();
 
     print('onLoad $size');
+
+    // _cameraP1 = CameraComponent.withFixedResolution(
+    //   width: 640,
+    //   height: 360,
+    //   world: world,
+    // );
+
+    // _cameraP1.moveTo(size * 0.5);
 
     _cameraP1 = CameraComponent(
       viewport: FixedSizeViewport(size.x * 0.5, size.y)
@@ -44,19 +49,6 @@ class TheSpaceRaceGame extends FlameGame<TheSpaceRaceWorld> {
     _cameraP2.viewport.size = Vector2(size.x * 0.5, size.y);
 
     _cameraP2.viewport.position = Vector2(size.x * 0.5, 0);
-
-    world.add(
-      CircleComponent(
-        radius: 50,
-        anchor: Anchor.center,
-        children: [
-          MoveEffect.by(
-            Vector2(size.x * 0.5, size.y),
-            EffectController(duration: 4, infinite: true, alternate: true),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
