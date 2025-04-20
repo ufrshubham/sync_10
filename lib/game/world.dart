@@ -1,24 +1,27 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame_game_jam_2025/game/game.dart';
+import 'package:flame_game_jam_2025/game/hyperspace_streaks_component.dart';
+import 'package:flame_game_jam_2025/game/hyperspace_tunnel_component.dart';
 
 class TheSpaceRaceWorld extends World with HasGameReference<TheSpaceRaceGame> {
   @override
   Future<void> onLoad() async {
-    final fragmentProgram = await FragmentProgram.fromAsset(
-      'assets/shaders/hyperspace-streaks.frag',
-    );
-
-    final shader = fragmentProgram.fragmentShader();
-
-    final hyperspaceStreaks = HpyerspaceStreaks(
-      shader: shader,
-      size: Vector2(game.size.x * 0.5, game.size.y),
-    );
-    await add(hyperspaceStreaks);
+    // ignore: literal_only_boolean_expressions, dead_code
+    if (false) {
+      final hyperspaceStreaks = HpyerspaceStreaksComponent(
+        size: Vector2(game.size.x * 0.5, game.size.y),
+      );
+      await add(hyperspaceStreaks);
+      // ignore: dead_code
+    } else {
+      final hyperspaceTunnel = HpyerspaceTunnelComponent(
+        size: Vector2(game.size.x * 0.5, game.size.y),
+      );
+      await add(hyperspaceTunnel);
+    }
 
     await add(
       CircleComponent(
@@ -32,33 +35,5 @@ class TheSpaceRaceWorld extends World with HasGameReference<TheSpaceRaceGame> {
         ],
       ),
     );
-  }
-}
-
-class HpyerspaceStreaks extends PositionComponent {
-  HpyerspaceStreaks({required this.shader, required super.size});
-
-  final FragmentShader shader;
-  final _paint = Paint();
-
-  var _iTime = 0.0;
-
-  @override
-  Future<void> onLoad() async {
-    shader.setFloat(0, size.x);
-    shader.setFloat(1, size.y);
-    shader.setFloat(2, _iTime);
-    _paint.shader = shader;
-  }
-
-  @override
-  void update(double dt) {
-    _iTime += dt;
-    shader.setFloat(2, _iTime);
-  }
-
-  @override
-  void render(Canvas canvas) {
-    canvas.drawRect(Rect.fromLTWH(x, y, size.x, size.y), _paint);
   }
 }

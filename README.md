@@ -6,4 +6,5 @@ A new Flutter project.
 
 ### Shaders
 
-- [Hyperspace Streaks](https://www.shadertoy.com/view/WdyXDm) from [blue_max](https://www.shadertoy.com/user/blue_max) with Minor tweaks
+- [Hyperspace Streaks](https://www.shadertoy.com/view/WdyXDm) by [blue_max](https://www.shadertoy.com/user/blue_max) with Minor tweaks
+- [Hyperspace Tunnel](https://www.shadertoy.com/view/WdyXDR) by [blue_max](https://www.shadertoy.com/user/blue_max) with Minor tweaks

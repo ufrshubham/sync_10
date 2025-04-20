@@ -80,11 +80,8 @@ vec3 pixelVal(vec2 coord)
     // Pixel to point (the center of the screen is (0,0)
     //float t1 = 2.8, t2 = 4.5;
 
-    vec2 xy = FlutterFragCoord().xy;
-    vec2 resolution = iResolution;
-    // vec2 uv = xy / (resolution);
-
-    vec2 uv = (2.0 * xy - resolution.xy) / resolution.x;
+    vec2 fragCoord = FlutterFragCoord().xy;
+    vec2 uv = (2.0 * fragCoord - iResolution.xy) / iResolution.x;
 
     vec2 ad = cart2polar(uv);
     // ad: polar coords

@@ -18,7 +18,7 @@ class TheSpaceRaceGame extends FlameGame<TheSpaceRaceWorld> {
   Future<void> onLoad() async {
     camera.removeFromParent();
 
-    print('onLoad $size');
+    // print('onLoad $size');
 
     // _cameraP1 = CameraComponent.withFixedResolution(
     //   width: 640,
@@ -55,7 +55,7 @@ class TheSpaceRaceGame extends FlameGame<TheSpaceRaceWorld> {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
 
-    print('onGameResize $size');
+    // print('onGameResize $size');
 
     _cameraP1.viewport = FixedSizeViewport(size.x * 0.5, size.y);
     _cameraP2.viewport = FixedSizeViewport(size.x * 0.5, size.y);
