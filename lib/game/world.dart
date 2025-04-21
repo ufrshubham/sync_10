@@ -6,6 +6,7 @@ import 'package:flame_game_jam_2025/game/game.dart';
 import 'package:flame_game_jam_2025/game/hyperspace_streaks_component.dart';
 import 'package:flame_game_jam_2025/game/hyperspace_tunnel_component.dart';
 import 'package:flame_game_jam_2025/game/input_component.dart';
+import 'package:flame_game_jam_2025/game/planet_component.dart';
 import 'package:flame_game_jam_2025/game/rocket_component.dart';
 
 class TheSpaceRaceWorld extends World with HasGameReference<TheSpaceRaceGame> {
@@ -34,7 +35,39 @@ class TheSpaceRaceWorld extends World with HasGameReference<TheSpaceRaceGame> {
         position: game.size / 2,
         input: _inputComponent,
         anchor: Anchor.center,
-        scale: Vector2.all(0.25),
+        scale: Vector2.all(0.20),
+      ),
+    );
+
+    await add(
+      PlanetComponent(
+        position: Vector2(270, 200),
+        anchor: Anchor.center,
+        scale: Vector2.all(0.75),
+      ),
+    );
+
+    await add(
+      PlanetComponent(
+        position: Vector2(800, 500),
+        anchor: Anchor.center,
+        scale: Vector2.all(0.75),
+      ),
+    );
+
+    await add(
+      PlanetComponent(
+        position: Vector2(1000, 200),
+        anchor: Anchor.center,
+        scale: Vector2.all(0.75),
+      ),
+    );
+
+    await add(
+      PlanetComponent(
+        position: Vector2(500, 500),
+        anchor: Anchor.center,
+        scale: Vector2.all(0.75),
       ),
     );
   }

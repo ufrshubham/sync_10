@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_game_jam_2025/game/input_component.dart';
+import 'package:flame_game_jam_2025/game/planet_component.dart';
 
 class RocketComponent extends PositionComponent with CollisionCallbacks {
   RocketComponent({
@@ -69,5 +70,26 @@ class RocketComponent extends PositionComponent with CollisionCallbacks {
       x + _moveDirection.x * _speed * dt,
       y + _moveDirection.y * _speed * dt,
     );
+  }
+
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    super.onCollisionStart(intersectionPoints, other);
+
+    if (other is PlanetComponent) {
+      print('Collision with planet!');
+    }
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+
+    if (other is PlanetComponent) {
+      print('Collision with planet ended!');
+    }
   }
 }
