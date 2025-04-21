@@ -1,4 +1,5 @@
 import 'dart:async';
+// import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -24,6 +25,7 @@ class TheSpaceRaceGame extends FlameGame<TheSpaceRaceWorld>
   Future<void> onLoad() async {
     await Flame.device.setLandscape();
     await Flame.device.fullScreen();
+    camera.moveTo(camera.viewport.virtualSize * 0.5);
 
     // camera.removeFromParent();
 

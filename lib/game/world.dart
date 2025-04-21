@@ -14,36 +14,24 @@ class TheSpaceRaceWorld extends World with HasGameReference<TheSpaceRaceGame> {
   @override
   Future<void> onLoad() async {
     // // ignore: literal_only_boolean_expressions, dead_code
-    // if (true) {
+    // if (false) {
     //   final hyperspaceStreaks = HpyerspaceStreaksComponent(
-    //     size: Vector2(game.size.x * 0.5, game.size.y),
+    //     size: Vector2(game.size.x, game.size.y),
     //   );
     //   await add(hyperspaceStreaks);
     //   // ignore: dead_code
     // } else {
     //   final hyperspaceTunnel = HpyerspaceTunnelComponent(
-    //     size: Vector2(game.size.x * 0.5, game.size.y),
+    //     size: Vector2(game.size.x, game.size.y),
     //   );
     //   await add(hyperspaceTunnel);
     // }
-
-    // await add(
-    //   CircleComponent(
-    //     radius: 50,
-    //     anchor: Anchor.center,
-    //     children: [
-    //       MoveEffect.by(
-    //         Vector2(game.size.x * 0.5, game.size.y),
-    //         EffectController(duration: 4, infinite: true, alternate: true),
-    //       ),
-    //     ],
-    //   ),
-    // );
 
     await add(_inputComponent);
 
     await add(
       RocketComponent(
+        position: game.size / 2,
         input: _inputComponent,
         anchor: Anchor.center,
         scale: Vector2.all(0.25),

@@ -1,10 +1,11 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_game_jam_2025/game/input_component.dart';
 
-class RocketComponent extends PositionComponent {
+class RocketComponent extends PositionComponent with CollisionCallbacks {
   RocketComponent({
     required this.input,
     super.position,
@@ -14,6 +15,7 @@ class RocketComponent extends PositionComponent {
 
   final InputComponent input;
   late final SpriteComponent _rocketSprite;
+  late final RectangleHitbox _hitbox;
 
   var _speed = 0.0;
   final _maxSpeed = 80.0;
@@ -32,6 +34,13 @@ class RocketComponent extends PositionComponent {
       anchor: Anchor.center,
     );
     await add(_rocketSprite);
+
+    await add(
+      _hitbox = RectangleHitbox(
+        size: _rocketSprite.size,
+        anchor: Anchor.center,
+      ),
+    );
   }
 
   @override
@@ -49,6 +58,7 @@ class RocketComponent extends PositionComponent {
         )!;
 
     _rocketSprite.angle += _angularSpeed * dt;
+    _hitbox.angle = _rocketSprite.angle;
 
     _moveDirection.setValues(
       -sin(_rocketSprite.angle),
