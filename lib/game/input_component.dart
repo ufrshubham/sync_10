@@ -1,18 +1,14 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 
 class InputComponent extends Component with KeyboardHandler {
   double vAxis = 0;
-  final _throttleSpeed = 10;
   bool _up = false;
   bool _down = false;
   double _upInput = 0;
   double _downInput = 0;
 
   double hAxis = 0;
-  final _steerSpeed = 2;
   bool _left = false;
   bool _right = false;
   double _leftInput = 0;
@@ -22,25 +18,19 @@ class InputComponent extends Component with KeyboardHandler {
 
   @override
   void update(double dt) {
-    _upInput = lerpDouble(_upInput, _up ? 1 : 0, _throttleSpeed * dt)!;
-    _downInput = lerpDouble(_downInput, _down ? 1 : 0, _throttleSpeed * dt)!;
-
+    _upInput = _up ? 1 : 0;
+    _downInput = _down ? 1 : 0;
     vAxis = _downInput - _upInput;
-
     if (vAxis.abs() < 0.0001) {
       vAxis = 0;
     }
 
-    _leftInput = lerpDouble(_leftInput, _left ? 1 : 0, _steerSpeed * dt)!;
-    _rightInput = lerpDouble(_rightInput, _right ? 1 : 0, _steerSpeed * dt)!;
-
+    _leftInput = _left ? 1 : 0;
+    _rightInput = _right ? 1 : 0;
     hAxis = _rightInput - _leftInput;
-
     if (hAxis.abs() < 0.0001) {
       hAxis = 0;
     }
-
-    super.update(dt);
   }
 
   @override
@@ -48,8 +38,8 @@ class InputComponent extends Component with KeyboardHandler {
     _up = isListening && keysPressed.contains(LogicalKeyboardKey.arrowUp);
     _down = isListening && keysPressed.contains(LogicalKeyboardKey.arrowDown);
 
-    _left = isListening && keysPressed.contains(LogicalKeyboardKey.arrowLeft);
-    _right = isListening && keysPressed.contains(LogicalKeyboardKey.arrowRight);
+    _left = isListening && keysPressed.contains(LogicalKeyboardKey.keyA);
+    _right = isListening && keysPressed.contains(LogicalKeyboardKey.keyD);
     return super.onKeyEvent(event, keysPressed);
   }
 }
