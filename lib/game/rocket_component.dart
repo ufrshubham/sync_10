@@ -79,17 +79,13 @@ class RocketComponent extends PositionComponent with CollisionCallbacks {
   ) {
     super.onCollisionStart(intersectionPoints, other);
 
-    if (other is PlanetComponent) {
-      print('Collision with planet!');
-    }
+    if (other is PlanetComponent) {}
   }
 
   @override
   void onCollisionEnd(PositionComponent other) {
     super.onCollisionEnd(other);
 
-    if (other is PlanetComponent) {
-      print('Collision with planet ended!');
-    }
+    if (other is PlanetComponent) {}
   }
 }

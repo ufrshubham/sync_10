@@ -1,80 +1,49 @@
 import 'dart:async';
-// import 'dart:ui';
-
-import 'package:flame/components.dart';
+import 'dart:ui';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
-import 'package:flame_game_jam_2025/game/world.dart';
+import 'package:flame_game_jam_2025/routes/level_selection.dart';
+import 'package:flame_game_jam_2025/routes/main_menu.dart';
+import 'package:flame_game_jam_2025/routes/settings.dart';
+import 'package:flutter/foundation.dart';
 
-class TheSpaceRaceGame extends FlameGame<TheSpaceRaceWorld>
+class TheSpaceRaceGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
-  TheSpaceRaceGame()
-    : super(
-        world: TheSpaceRaceWorld(),
-        camera: CameraComponent.withFixedResolution(width: 1280, height: 720),
-      );
+  final soundEffects = ValueNotifier(true);
+  final backgroundMusic = ValueNotifier(true);
 
-  // var _cameraP1 = CameraComponent();
-  // var _cameraP2 = CameraComponent();
+  final router = RouterComponent(
+    initialRoute: MainMenu.id,
+    routes: {
+      MainMenu.id: OverlayRoute(
+        (context, game) => MainMenu(game: game as TheSpaceRaceGame),
+      ),
+      Settings.id: OverlayRoute(
+        (context, game) => Settings(game: game as TheSpaceRaceGame),
+      ),
+      LevelSelection.id: OverlayRoute(
+        (context, game) => LevelSelection(game: game as TheSpaceRaceGame),
+      ),
+      // PauseMenu.id: OverlayRoute(
+      //   (context, game) => PauseMenu(game: game as TheSpaceRaceGame),
+      // ),
+      // GameOver.id: OverlayRoute(
+      //   (context, game) => GameOver(game: game as TheSpaceRaceGame),
+      // ),
+      // LevelComplete.id: OverlayRoute(
+      //   (context, game) => LevelComplete(game: game as TheSpaceRaceGame),
+      // ),
+    },
+  );
 
-  // @override
-  // Color backgroundColor() => const Color.fromARGB(255, 238, 248, 254);
+  @override
+  Color backgroundColor() => const Color.fromARGB(255, 34, 34, 34);
 
   @override
   Future<void> onLoad() async {
     await Flame.device.setLandscape();
     await Flame.device.fullScreen();
-    camera.moveTo(camera.viewport.virtualSize * 0.5);
-
-    // camera.removeFromParent();
-
-    // print('onLoad $size');
-
-    // _cameraP1 = CameraComponent.withFixedResolution(
-    //   width: 640,
-    //   height: 360,
-    //   world: world,
-    // );
-
-    // _cameraP1.moveTo(size * 0.5);
-
-    // _splitCameraSetup();
+    await add(router);
   }
-
-  // void _splitCameraSetup() {
-  //   _cameraP1 = CameraComponent(
-  //     viewport: FixedSizeViewport(size.x * 0.5, size.y)
-  //       ..position = Vector2(0, 0),
-  //     world: world,
-  //   );
-  //   _cameraP2 = CameraComponent(
-  //     viewport: FixedSizeViewport(size.x * 0.5, size.y)
-  //       ..position = Vector2(size.x * 0.5, 0),
-  //     world: world,
-  //   );
-
-  //   _cameraP1.moveTo(Vector2(size.x * 0.25, size.y * 0.5));
-  //   _cameraP2.moveTo(Vector2(size.x * 0.25, size.y * 0.5));
-
-  //   add(_cameraP1);
-  //   add(_cameraP2);
-
-  //   _cameraP1.viewport.size = Vector2(size.x * 0.5, size.y);
-  //   _cameraP2.viewport.size = Vector2(size.x * 0.5, size.y);
-
-  //   _cameraP2.viewport.position = Vector2(size.x * 0.5, 0);
-  // }
-
-  // @override
-  // void onGameResize(Vector2 size) {
-  //   super.onGameResize(size);
-
-  //   // print('onGameResize $size');
-
-  //   _cameraP1.viewport = FixedSizeViewport(size.x * 0.5, size.y);
-  //   _cameraP2.viewport = FixedSizeViewport(size.x * 0.5, size.y);
-
-  //   _cameraP2.viewport.position = Vector2(size.x * 0.5, 0);
-  // }
 }
