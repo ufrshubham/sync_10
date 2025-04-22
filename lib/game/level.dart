@@ -10,6 +10,7 @@ import 'package:flame_game_jam_2025/game/game_play.dart';
 import 'package:flame_game_jam_2025/game/input_component.dart';
 import 'package:flame_game_jam_2025/game/planet_component.dart';
 import 'package:flame_game_jam_2025/game/rocket_component.dart';
+import 'package:flame_game_jam_2025/game/star_nest_component.dart';
 
 class Level extends PositionComponent
     with
@@ -50,6 +51,9 @@ class Level extends PositionComponent
     //   );
     //   add(hyperspaceTunnel);
     // }
+
+    final starNest = StarNextComponent(size: Gameplay.visibleGameSize);
+    await add(starNest);
 
     await add(_inputComponent);
 

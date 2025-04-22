@@ -24,3 +24,4 @@ flutter:
   shaders:
     - assets/shaders/hyperspace-streaks.frag
     - assets/shaders/hyperspace-tunnel.frag
+    - assets/shaders/star-nest.frag
