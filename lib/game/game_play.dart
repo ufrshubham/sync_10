@@ -32,7 +32,7 @@ class Gameplay extends Component with HasGameReference<TheSpaceRaceGame> {
   Future<void> onLoad() async {
     //bool seeDebug = true;
     final camera = cameras[CameraType.primary]!;
-    camera.moveTo(camera.viewport.virtualSize * 0.5);
+    camera.moveTo(visibleGameSize * 0.5);
 
     final debugCamera = cameras[CameraType.debug];
     debugCamera?.viewport.position.setFrom(-game.size / 3);
@@ -44,7 +44,7 @@ class Gameplay extends Component with HasGameReference<TheSpaceRaceGame> {
 
     await camera.viewport.add(
       _fadeComponent = RectangleComponent(
-        size: game.canvasSize,
+        size: visibleGameSize,
         paint: Paint()..color = game.backgroundColor(),
       ),
     );
@@ -53,12 +53,6 @@ class Gameplay extends Component with HasGameReference<TheSpaceRaceGame> {
     // if (seeDebug) {
     //   await add(debugCamera!);
     // }
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    _fadeComponent?.size.setFrom(size);
   }
 
   Future<void> fadeIn() async {

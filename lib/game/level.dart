@@ -5,6 +5,8 @@ import 'package:flame/components.dart';
 
 import 'package:flame_game_jam_2025/game/game.dart';
 import 'package:flame_game_jam_2025/game/game_play.dart';
+// import 'package:flame_game_jam_2025/game/hyperspace_streaks_component.dart';
+// import 'package:flame_game_jam_2025/game/hyperspace_tunnel_component.dart';
 import 'package:flame_game_jam_2025/game/input_component.dart';
 import 'package:flame_game_jam_2025/game/planet_component.dart';
 import 'package:flame_game_jam_2025/game/rocket_component.dart';
@@ -35,6 +37,20 @@ class Level extends PositionComponent
 
   @override
   Future<void> onLoad() async {
+    // // ignore: literal_only_boolean_expressions, dead_code
+    // if (true) {
+    //   final hyperspaceStreaks = HpyerspaceStreaksComponent(
+    //     size: Gameplay.visibleGameSize,
+    //   );
+    //   add(hyperspaceStreaks);
+    //   // ignore: dead_code
+    // } else {
+    //   final hyperspaceTunnel = HpyerspaceTunnelComponent(
+    //     size: Gameplay.visibleGameSize,
+    //   );
+    //   add(hyperspaceTunnel);
+    // }
+
     await add(_inputComponent);
 
     await add(

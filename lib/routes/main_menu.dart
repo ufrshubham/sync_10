@@ -18,7 +18,10 @@ class MainMenu extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('The Space Race', style: TextStyle(fontSize: 40)),
+            const Text(
+              'The Space Race',
+              style: TextStyle(fontSize: 40, color: Colors.white),
+            ),
             const SizedBox(height: 20),
             SizedBox(
               width: 150,
