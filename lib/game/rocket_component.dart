@@ -22,6 +22,9 @@ class RocketComponent extends PositionComponent with CollisionCallbacks {
   final _maxSpeed = 80.0;
   static const _acceleration = 1;
 
+  final _maxBoostSpeed = 160.0;
+  final _maxBoostAcceleration = 20.0;
+
   var _angularSpeed = 0.0;
   final _maxAngularSpeed = 2.0;
   static const _angularAcceleration = 1;
@@ -50,7 +53,17 @@ class RocketComponent extends PositionComponent with CollisionCallbacks {
   }
 
   void _updatePosition(double dt) {
-    _speed = lerpDouble(_speed, input.vAxis * _maxSpeed, _acceleration * dt)!;
+    if (input.boost) {
+      _speed =
+          lerpDouble(
+            _speed,
+            input.vAxis * _maxBoostSpeed,
+            _maxBoostAcceleration * dt,
+          )!;
+    } else {
+      _speed = lerpDouble(_speed, input.vAxis * _maxSpeed, _acceleration * dt)!;
+    }
+
     _angularSpeed =
         lerpDouble(
           _angularSpeed,
