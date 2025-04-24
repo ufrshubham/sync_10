@@ -35,6 +35,8 @@ class Level extends PositionComponent
   final Vector2 tileSize;
 
   final _inputComponent = InputComponent();
+  final _gamepadComponent = GamepadComponenet();
+  late final PositionComponent _rocket;
 
   @override
   Future<void> onLoad() async {
@@ -56,15 +58,16 @@ class Level extends PositionComponent
     await add(starNest);
 
     await add(_inputComponent);
+    await add(_gamepadComponent);
 
-    await add(
-      RocketComponent(
-        position: game.size / 2,
-        input: _inputComponent,
-        anchor: Anchor.center,
-        scale: Vector2.all(0.20),
-      ),
+    _rocket = RocketComponent(
+      position: game.size / 2,
+      input: _gamepadComponent,
+      anchor: Anchor.center,
+      scale: Vector2.all(0.20),
     );
+
+    await add(_rocket);
 
     await add(
       PlanetComponent(
