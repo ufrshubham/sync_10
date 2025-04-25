@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flame/events.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame_game_jam_2025/routes/level_selection.dart';
 import 'package:flame_game_jam_2025/routes/main_menu.dart';
@@ -42,8 +41,6 @@ class TheSpaceRaceGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    await Flame.device.setLandscape();
-    await Flame.device.fullScreen();
     await add(router);
   }
 }

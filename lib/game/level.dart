@@ -34,8 +34,7 @@ class Level extends PositionComponent
   final String fileName;
   final Vector2 tileSize;
 
-  final _inputComponent = InputComponent();
-  final _gamepadComponent = GamepadComponenet();
+  final _inputComponent = GamepadComponenet();
   late final PositionComponent _rocket;
 
   @override
@@ -57,12 +56,9 @@ class Level extends PositionComponent
     final starNest = StarNextComponent(size: Gameplay.visibleGameSize);
     await add(starNest);
 
-    await add(_inputComponent);
-    await add(_gamepadComponent);
-
     _rocket = RocketComponent(
       position: game.size / 2,
-      input: _gamepadComponent,
+      input: _inputComponent,
       anchor: Anchor.center,
       scale: Vector2.all(0.20),
     );

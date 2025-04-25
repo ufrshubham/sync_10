@@ -6,24 +6,26 @@ import 'package:gamepads/gamepads.dart';
 
 class InputComponent extends Component with KeyboardHandler {
   double _vAxis = 0;
+  double _hAxis = 0;
+
   bool _up = false;
   bool _down = false;
-  double _upInput = 0;
-  double _downInput = 0;
-
-  double _hAxis = 0;
   bool _left = false;
   bool _right = false;
+  bool _boost = false;
+  bool _slowDown = false;
+
+  double _upInput = 0;
+  double _downInput = 0;
   double _leftInput = 0;
   double _rightInput = 0;
-
-  bool _boost = false;
 
   bool isListening = true;
 
   double get vAxis => _vAxis;
   double get hAxis => _hAxis;
   bool get boost => _boost;
+  bool get slowDown => _slowDown;
 
   @override
   void update(double dt) {
@@ -51,6 +53,8 @@ class InputComponent extends Component with KeyboardHandler {
     _right = isListening && keysPressed.contains(LogicalKeyboardKey.keyD);
 
     _boost = isListening && keysPressed.contains(LogicalKeyboardKey.space);
+    _slowDown =
+        isListening && keysPressed.contains(LogicalKeyboardKey.shiftRight);
     return super.onKeyEvent(event, keysPressed);
   }
 }
@@ -93,6 +97,16 @@ class GamepadComponenet extends InputComponent {
         } else if (event.value == _neutralValue) {
           _up = false;
           _down = false;
+        }
+      }
+    }
+
+    if (event.type == KeyType.button) {
+      if (event.key == _buttonA) {
+        if (event.value == _buttonPressed) {
+          _slowDown = true;
+        } else if (event.value == _buttonReleased) {
+          _slowDown = false;
         }
       }
     }

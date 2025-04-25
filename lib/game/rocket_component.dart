@@ -4,9 +4,11 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_game_jam_2025/game/input_component.dart';
+import 'package:flame_game_jam_2025/game/level.dart';
 import 'package:flame_game_jam_2025/game/planet_component.dart';
 
-class RocketComponent extends PositionComponent with CollisionCallbacks {
+class RocketComponent extends PositionComponent
+    with CollisionCallbacks, ParentIsA<Level> {
   RocketComponent({
     required this.input,
     super.position,
@@ -19,15 +21,18 @@ class RocketComponent extends PositionComponent with CollisionCallbacks {
   late final RectangleHitbox _hitbox;
 
   var _speed = 0.0;
-  final _maxSpeed = 80.0;
+  static const _maxSpeed = 80.0;
   static const _acceleration = 1;
 
-  final _maxBoostSpeed = 160.0;
-  final _maxBoostAcceleration = 20.0;
+  static const _maxBoostSpeed = 160.0;
+  static const _maxBoostAcceleration = 20.0;
 
   var _angularSpeed = 0.0;
-  final _maxAngularSpeed = 2.0;
+  static const _maxAngularSpeed = 2.0;
   static const _angularAcceleration = 1;
+
+  static const _maxSlowDownAngularSpeed = 4.0;
+  static const _maxSlowDownAngularAcceleration = 2.0;
 
   final _moveDirection = Vector2(0, 0);
 
@@ -64,12 +69,23 @@ class RocketComponent extends PositionComponent with CollisionCallbacks {
       _speed = lerpDouble(_speed, input.vAxis * _maxSpeed, _acceleration * dt)!;
     }
 
-    _angularSpeed =
-        lerpDouble(
-          _angularSpeed,
-          input.hAxis * _maxAngularSpeed,
-          _angularAcceleration * dt,
-        )!;
+    if (input.slowDown) {
+      parent.timeScale = 0.25;
+      _angularSpeed =
+          lerpDouble(
+            _angularSpeed,
+            input.hAxis * _maxSlowDownAngularSpeed,
+            _maxSlowDownAngularAcceleration * dt,
+          )!;
+    } else {
+      parent.timeScale = 1.0;
+      _angularSpeed =
+          lerpDouble(
+            _angularSpeed,
+            input.hAxis * _maxAngularSpeed,
+            _angularAcceleration * dt,
+          )!;
+    }
 
     _rocketSprite.angle += _angularSpeed * dt;
     _hitbox.angle = _rocketSprite.angle;
