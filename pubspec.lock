@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: a7f37ff061d7abc2fcf213554b9dcaca713c5853afa5c065c44888bc9ccaf813
+      sha256: "2fde1607386ab523f7a36bb3e7edb43bd58e6edaf2ffb29d8a6d578b297fdbbd"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.6"
+    version: "4.0.7"
   async:
     dependency: transitive
     description:
@@ -111,10 +111,10 @@ packages:
     dependency: "direct main"
     description:
       name: gamepads
-      sha256: "6201a1ea34a9ae80842bd0fd12770b75e0274f721238b1089b7545d6871fdac5"
+      sha256: "57243adbeef806ff54f580e311dc3e26167db3878af0d014ceb099e3b3de0edd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.7"
   gamepads_android:
     dependency: transitive
     description:
@@ -159,10 +159,10 @@ packages:
     dependency: transitive
     description:
       name: gamepads_windows
-      sha256: "3af20fef8b554e0bbfb6c94f07a264e186ecf8f7829448b162c22dcc8a3c155b"
+      sha256: "2008544c99a1412d538be5d876f8a0341c29764e97c8483aeecdf65dc658fb41"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.2"
+    version: "0.1.4"
   leak_tracker:
     dependency: transitive
     description:

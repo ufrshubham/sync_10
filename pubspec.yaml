@@ -11,7 +11,7 @@ dependencies:
   flame_tiled: 3.0.2
   flutter:
     sdk: flutter
-  gamepads: 0.1.5
+  gamepads: 0.1.7
 
 dev_dependencies:
   flame_lint: 1.3.0
@@ -22,6 +22,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/tiles/
   shaders:
     - assets/shaders/hyperspace-streaks.frag
     - assets/shaders/hyperspace-tunnel.frag
