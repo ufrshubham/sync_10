@@ -14,6 +14,7 @@ class RocketComponent extends PositionComponent
     super.position,
     super.anchor,
     super.scale,
+    super.children,
   });
 
   final InputComponent input;

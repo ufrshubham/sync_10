@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:flame/camera.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 
 import 'package:flame_game_jam_2025/game/game.dart';
 import 'package:flame_game_jam_2025/game/game_play.dart';
@@ -11,6 +14,7 @@ import 'package:flame_game_jam_2025/game/input_component.dart';
 import 'package:flame_game_jam_2025/game/planet_component.dart';
 import 'package:flame_game_jam_2025/game/rocket_component.dart';
 import 'package:flame_game_jam_2025/game/star_nest_component.dart';
+import 'package:flame_tiled/flame_tiled.dart';
 
 class Level extends PositionComponent
     with
@@ -37,6 +41,8 @@ class Level extends PositionComponent
   final _inputComponent = GamepadComponenet();
   late final PositionComponent _rocket;
 
+  static final _random = Random();
+
   @override
   Future<void> onLoad() async {
     // // ignore: literal_only_boolean_expressions, dead_code
@@ -53,17 +59,42 @@ class Level extends PositionComponent
     //   add(hyperspaceTunnel);
     // }
 
-    final starNest = StarNextComponent(size: Gameplay.visibleGameSize);
+    await add(_inputComponent);
+
+    final map = await TiledComponent.load(fileName, tileSize);
+    size = map.size;
+
+    final starNest = StarNextComponent(size: map.size);
     await add(starNest);
 
-    _rocket = RocketComponent(
-      position: game.size / 2,
-      input: _inputComponent,
-      anchor: Anchor.center,
-      scale: Vector2.all(0.20),
-    );
-
-    await add(_rocket);
+    final spawnAreas = map.tileMap.getLayer<ObjectGroup>('SpawnAreas');
+    if (spawnAreas != null) {
+      for (final spawnArea in spawnAreas.objects) {
+        switch (spawnArea.name) {
+          case 'Rocket':
+            final p =
+                spawnArea.position..add(
+                  Vector2(
+                    _random.nextDouble() * spawnArea.size.x,
+                    _random.nextDouble() * spawnArea.size.y,
+                  ),
+                );
+            _rocket = RocketComponent(
+              position: p,
+              input: _inputComponent,
+              anchor: Anchor.center,
+              scale: Vector2.all(0.20),
+              children: [
+                BoundedPositionBehavior(
+                  bounds: Rectangle.fromLTWH(16, 16, size.x - 32, size.y - 32),
+                ),
+              ],
+            );
+            await add(_rocket);
+            break;
+        }
+      }
+    }
 
     await add(
       PlanetComponent(
@@ -102,6 +133,16 @@ class Level extends PositionComponent
   void onMount() {
     super.onMount();
     ancestor.fadeIn();
+
+    ancestor.camera.follow(_rocket);
+    ancestor.camera.setBounds(
+      Rectangle.fromLTWH(
+        Gameplay.visibleGameSize.x * 0.5,
+        Gameplay.visibleGameSize.y * 0.5,
+        width - Gameplay.visibleGameSize.x,
+        height - Gameplay.visibleGameSize.y,
+      ),
+    );
   }
 
   void onFinish(Set<Vector2> intersectionPoints, ShapeHitbox other) {

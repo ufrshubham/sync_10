@@ -26,6 +26,8 @@ class Gameplay extends Component with HasGameReference<TheSpaceRaceGame> {
     ),
   };
 
+  CameraComponent get camera => cameras[CameraType.primary]!;
+
   Gameplay(this.currentLevelIndex);
 
   @override
@@ -39,7 +41,7 @@ class Gameplay extends Component with HasGameReference<TheSpaceRaceGame> {
 
     await addAll([world, camera]);
 
-    final level = Level('Level$currentLevelIndex.tmx', Vector2.all(16));
+    final level = Level('level.tmx', Vector2.all(16));
     await world.add(level);
 
     await camera.viewport.add(
