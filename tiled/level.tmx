@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="9">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="14">
  <editorsettings>
   <export target="../assets/tiles/level.tmx" format="tmx"/>
  </editorsettings>
@@ -209,5 +209,9 @@
  </layer>
  <objectgroup id="2" name="SpawnAreas">
   <object id="1" name="Rocket" type="Rocket" x="1440" y="1440" width="320" height="320"/>
+  <object id="10" name="Orb" type="Orb" x="320" y="320" width="320" height="320"/>
+  <object id="11" name="Orb" type="Orb" x="640" y="2560" width="320" height="320"/>
+  <object id="12" name="Orb" type="Orb" x="2400" y="480" width="320" height="320"/>
+  <object id="13" name="Orb" type="Orb" x="2560" y="2240" width="320" height="320"/>
  </objectgroup>
 </map>

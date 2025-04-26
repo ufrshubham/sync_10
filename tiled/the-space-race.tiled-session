@@ -3,10 +3,18 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "level.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "level.tmx": {
+            "scale": 0.25,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2872,
+                "y": 1840
+            }
+        }
     },
     "last.exportedFilePath": "C:/Users/DevKage/Development/Flutter/FlameGames/flame_game_jam_2025/assets/tiles",
     "map.height": 200,
@@ -16,8 +24,10 @@
     "map.tileWidth": 16,
     "map.width": 200,
     "openFiles": [
+        "level.tmx"
     ],
     "project": "the-space-race.tiled-project",
     "recentFiles": [
+        "level.tmx"
     ]
 }
