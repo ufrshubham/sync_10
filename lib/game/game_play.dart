@@ -1,10 +1,11 @@
+import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame_game_jam_2025/game/game.dart';
 import 'package:flame_game_jam_2025/game/level.dart';
 import 'package:flutter/material.dart';
 
-enum CameraType { primary, debug }
+enum CameraType { primary, miniMap, debug }
 
 class Gameplay extends Component with HasGameReference<TheSpaceRaceGame> {
   static final visibleGameSize = Vector2(1280, 720);
@@ -19,6 +20,15 @@ class Gameplay extends Component with HasGameReference<TheSpaceRaceGame> {
       height: visibleGameSize.y,
       world: world,
     ),
+    CameraType.miniMap: CameraComponent(
+      viewport: CircularViewport(Gameplay.visibleGameSize.x * 0.07),
+      viewfinder: Viewfinder()..zoom = 0.125,
+      world: world,
+      backdrop: RectangleComponent(
+        size: Gameplay.visibleGameSize,
+        paint: Paint()..color = Colors.black.withValues(alpha: 0.8),
+      ),
+    ),
     CameraType.debug: CameraComponent.withFixedResolution(
       width: visibleGameSize.x * 15,
       height: visibleGameSize.y * 15,
@@ -27,6 +37,8 @@ class Gameplay extends Component with HasGameReference<TheSpaceRaceGame> {
   };
 
   CameraComponent get camera => cameras[CameraType.primary]!;
+  CameraComponent get miniMap => cameras[CameraType.miniMap]!;
+  CameraComponent? get debugCamera => cameras[CameraType.debug];
 
   Gameplay(this.currentLevelIndex);
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flame/camera.dart';
 import 'package:flame/collisions.dart';
@@ -11,10 +12,12 @@ import 'package:flame_game_jam_2025/game/game_play.dart';
 // import 'package:flame_game_jam_2025/game/hyperspace_streaks_component.dart';
 // import 'package:flame_game_jam_2025/game/hyperspace_tunnel_component.dart';
 import 'package:flame_game_jam_2025/game/input_component.dart';
+import 'package:flame_game_jam_2025/game/orb_component.dart';
 import 'package:flame_game_jam_2025/game/planet_component.dart';
 import 'package:flame_game_jam_2025/game/rocket_component.dart';
 import 'package:flame_game_jam_2025/game/star_nest_component.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:flutter/material.dart';
 
 class Level extends PositionComponent
     with
@@ -72,7 +75,7 @@ class Level extends PositionComponent
       for (final spawnArea in spawnAreas.objects) {
         switch (spawnArea.name) {
           case 'Rocket':
-            final p =
+            final randomPosition =
                 spawnArea.position..add(
                   Vector2(
                     _random.nextDouble() * spawnArea.size.x,
@@ -80,7 +83,7 @@ class Level extends PositionComponent
                   ),
                 );
             _rocket = RocketComponent(
-              position: p,
+              position: randomPosition,
               input: _inputComponent,
               anchor: Anchor.center,
               scale: Vector2.all(0.5),
@@ -93,6 +96,18 @@ class Level extends PositionComponent
               ],
             );
             await add(_rocket);
+            break;
+          case 'Orb':
+            final randomPosition =
+                spawnArea.position..add(
+                  Vector2(
+                    _random.nextDouble() * spawnArea.size.x,
+                    _random.nextDouble() * spawnArea.size.y,
+                  ),
+                );
+            await add(
+              OrbComponent(position: randomPosition, anchor: Anchor.center),
+            );
             break;
         }
       }
@@ -144,6 +159,13 @@ class Level extends PositionComponent
         width - Gameplay.visibleGameSize.x,
         height - Gameplay.visibleGameSize.y,
       ),
+    );
+
+    ancestor.miniMap.follow(_rocket);
+    ancestor.camera.viewport.add(ancestor.miniMap);
+    ancestor.miniMap.viewport.position = Vector2(
+      20,
+      ancestor.camera.viewport.size.y - ancestor.miniMap.viewport.size.y,
     );
   }
 

@@ -3,12 +3,15 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_game_jam_2025/game/game_play.dart';
 import 'package:flame_game_jam_2025/game/input_component.dart';
 import 'package:flame_game_jam_2025/game/level.dart';
+import 'package:flame_game_jam_2025/game/orb_component.dart';
 import 'package:flame_game_jam_2025/game/planet_component.dart';
+import 'package:flutter/material.dart';
 
 class RocketComponent extends PositionComponent
-    with CollisionCallbacks, ParentIsA<Level> {
+    with CollisionCallbacks, ParentIsA<Level>, HasAncestor<Gameplay> {
   RocketComponent({
     required this.input,
     super.position,
@@ -26,21 +29,22 @@ class RocketComponent extends PositionComponent
   late final RectangleHitbox _hitbox;
 
   var _speed = 0.0;
+  var _speedFactor = 0.0;
+  var _angularSpeed = 0.0;
+  var _nOrbsCollected = 0;
+
+  final _moveDirection = Vector2(0, 0);
+
   static const _maxSpeed = 80.0;
   static const _acceleration = 1;
-
   static const _maxBoostSpeed = 160.0;
   static const _maxBoostAcceleration = 20.0;
-
-  var _angularSpeed = 0.0;
   static const _maxAngularSpeed = 2.0;
   static const _angularAcceleration = 1;
-
   static const _maxSlowDownAngularSpeed = 4.0;
   static const _maxSlowDownAngularAcceleration = 2.0;
 
-  final _moveDirection = Vector2(0, 0);
-  var _speedFactor = 0.0;
+  int get nOrbsCollected => _nOrbsCollected;
 
   @override
   Future<void> onLoad() async {
@@ -94,6 +98,19 @@ class RocketComponent extends PositionComponent
   @override
   void update(double dt) {
     _updatePosition(dt);
+  }
+
+  @override
+  void renderTree(Canvas canvas) {
+    if (CameraComponent.currentCamera == ancestor.camera) {
+      super.renderTree(canvas);
+    } else {
+      canvas.drawCircle(
+        Offset(position.x, position.y),
+        50,
+        Paint()..color = Colors.white.withValues(alpha: 0.5),
+      );
+    }
   }
 
   void _updatePosition(double dt) {
@@ -159,7 +176,11 @@ class RocketComponent extends PositionComponent
   ) {
     super.onCollisionStart(intersectionPoints, other);
 
-    if (other is PlanetComponent) {}
+    if (other is PlanetComponent) {
+    } else if (other is OrbComponent) {
+      other.removeFromParent();
+      _nOrbsCollected++;
+    }
   }
 
   @override
