@@ -9,6 +9,7 @@ class PlanetComponent extends PositionComponent with HasGameReference {
     required super.position,
     required super.anchor,
     required super.scale,
+    super.children,
   });
 
   static const _planets = [

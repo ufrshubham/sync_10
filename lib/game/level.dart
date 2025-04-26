@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flame/camera.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 
 import 'package:flame_game_jam_2025/game/game.dart';
@@ -17,7 +17,6 @@ import 'package:flame_game_jam_2025/game/planet_component.dart';
 import 'package:flame_game_jam_2025/game/rocket_component.dart';
 import 'package:flame_game_jam_2025/game/star_nest_component.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:flutter/material.dart';
 
 class Level extends PositionComponent
     with
@@ -87,8 +86,6 @@ class Level extends PositionComponent
               input: _inputComponent,
               anchor: Anchor.center,
               scale: Vector2.all(0.5),
-              nativeAngle: pi,
-              angle: pi,
               children: [
                 BoundedPositionBehavior(
                   bounds: Rectangle.fromLTWH(16, 16, size.x - 32, size.y - 32),
@@ -118,6 +115,12 @@ class Level extends PositionComponent
         position: Vector2(270, 200),
         anchor: Anchor.center,
         scale: Vector2.all(0.75),
+        children: [
+          RotateEffect.by(
+            2 * pi,
+            EffectController(duration: 10, infinite: true),
+          ),
+        ],
       ),
     );
 

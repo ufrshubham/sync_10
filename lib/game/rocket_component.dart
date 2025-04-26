@@ -24,9 +24,14 @@ class RocketComponent extends PositionComponent
 
   final InputComponent input;
   late final SpriteComponent _rocketSprite;
-  late final SpriteGroupComponent<_RocketFlameSprites> _rocketFlameSprite1;
-  late final SpriteGroupComponent<_RocketFlameSprites> _rocketFlameSprite2;
+  // late final SpriteGroupComponent<_RocketFlameSprites> _rocketFlameSprite1;
+  // late final SpriteGroupComponent<_RocketFlameSprites> _rocketFlameSprite2;
   late final RectangleHitbox _hitbox;
+
+  late final SpriteAnimationGroupComponent<_RocketFlameSprites>
+  _rocketFlameLeft;
+  late final SpriteAnimationGroupComponent<_RocketFlameSprites>
+  _rocketFlameRight;
 
   var _speed = 0.0;
   var _speedFactor = 0.0;
@@ -49,43 +54,40 @@ class RocketComponent extends PositionComponent
   @override
   Future<void> onLoad() async {
     _rocketSprite = SpriteComponent(
-      sprite: await Sprite.load('spaceShips_009.png'),
+      sprite: await Sprite.load('Spaceship.png'),
       anchor: Anchor.center,
     );
     await add(_rocketSprite);
 
-    _rocketFlameSprite1 = SpriteGroupComponent<_RocketFlameSprites>(
-      current: _RocketFlameSprites.flameNormal,
-      sprites: {
-        _RocketFlameSprites.flameNormal: await Sprite.load(
-          'spaceEffects_005.png',
-        ),
-        _RocketFlameSprites.flameBoost: await Sprite.load(
-          'spaceEffects_006.png',
-        ),
-      },
-      anchor: Anchor.topCenter,
-      position: Vector2(_rocketSprite.width * 0.7, 5),
-      angle: pi,
-    );
+    final animation = {
+      _RocketFlameSprites.flameNormal: SpriteAnimation.spriteList([
+        await Sprite.load('SpaceshipFlamesLow-1.png'),
+        await Sprite.load('SpaceshipFlamesLow-2.png'),
+      ], stepTime: 0.1),
+      _RocketFlameSprites.flameBoost: SpriteAnimation.spriteList([
+        await Sprite.load('SpaceshipFlamesHigh-1.png'),
+        await Sprite.load('SpaceshipFlamesHigh-2.png'),
+      ], stepTime: 0.1),
+    };
 
-    _rocketFlameSprite2 = SpriteGroupComponent<_RocketFlameSprites>(
-      current: _RocketFlameSprites.flameNormal,
-      sprites: {
-        _RocketFlameSprites.flameNormal: await Sprite.load(
-          'spaceEffects_005.png',
-        ),
-        _RocketFlameSprites.flameBoost: await Sprite.load(
-          'spaceEffects_006.png',
-        ),
-      },
+    _rocketFlameLeft = SpriteAnimationGroupComponent<_RocketFlameSprites>(
       anchor: Anchor.topCenter,
-      position: Vector2(_rocketSprite.width * 0.3, 5),
-      angle: pi,
-    );
+      current: _RocketFlameSprites.flameNormal,
+      position: Vector2(_rocketSprite.width * 0.1, _rocketSprite.height),
+      animations: animation,
+      scale: Vector2(0.3, 0.25),
+    )..opacity = 0.25;
 
-    _rocketSprite.add(_rocketFlameSprite1);
-    _rocketSprite.add(_rocketFlameSprite2);
+    _rocketFlameRight = SpriteAnimationGroupComponent<_RocketFlameSprites>(
+      anchor: Anchor.topCenter,
+      current: _RocketFlameSprites.flameNormal,
+      position: Vector2(_rocketSprite.width * 0.9, _rocketSprite.height),
+      animations: animation,
+      scale: Vector2(0.3, 0.25),
+    )..opacity = 0.25;
+
+    await _rocketSprite.add(_rocketFlameLeft);
+    await _rocketSprite.add(_rocketFlameRight);
 
     await add(
       _hitbox = RectangleHitbox(
@@ -115,8 +117,8 @@ class RocketComponent extends PositionComponent
 
   void _updatePosition(double dt) {
     if (input.boost) {
-      _rocketFlameSprite1.current = _RocketFlameSprites.flameBoost;
-      _rocketFlameSprite2.current = _RocketFlameSprites.flameBoost;
+      _rocketFlameLeft.current = _RocketFlameSprites.flameBoost;
+      _rocketFlameRight.current = _RocketFlameSprites.flameBoost;
       _speed =
           lerpDouble(
             _speed,
@@ -126,8 +128,8 @@ class RocketComponent extends PositionComponent
 
       _speedFactor = -_speed / _maxBoostSpeed;
     } else {
-      _rocketFlameSprite1.current = _RocketFlameSprites.flameNormal;
-      _rocketFlameSprite2.current = _RocketFlameSprites.flameNormal;
+      _rocketFlameLeft.current = _RocketFlameSprites.flameNormal;
+      _rocketFlameRight.current = _RocketFlameSprites.flameNormal;
       _speed = lerpDouble(_speed, input.vAxis * _maxSpeed, _acceleration * dt)!;
 
       _speedFactor = -_speed / _maxSpeed;
@@ -165,8 +167,8 @@ class RocketComponent extends PositionComponent
     );
 
     final flameAdjustment = -input.hAxis * 0.25;
-    _rocketFlameSprite1.scale.y = _speedFactor - flameAdjustment;
-    _rocketFlameSprite2.scale.y = _speedFactor + flameAdjustment;
+    _rocketFlameLeft.scale.y = _speedFactor - flameAdjustment;
+    _rocketFlameRight.scale.y = _speedFactor + flameAdjustment;
   }
 
   @override
