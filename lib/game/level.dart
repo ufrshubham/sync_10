@@ -18,10 +18,7 @@ import 'package:sync_10/game/rocket_component.dart';
 import 'package:sync_10/game/star_nest_component.dart';
 
 class Level extends PositionComponent
-    with
-        HasTimeScale,
-        HasAncestor<Gameplay>,
-        HasGameReference<Sync10Game> {
+    with HasTimeScale, HasAncestor<Gameplay>, HasGameReference<Sync10Game> {
   Level(
     this.fileName,
     this.tileSize, {
@@ -105,47 +102,38 @@ class Level extends PositionComponent
               OrbComponent(position: randomPosition, anchor: Anchor.center),
             );
             break;
+
+          case 'Planet':
+            for (var i = 0; i < 50; ++i) {
+              final randomPosition =
+                  spawnArea.position..add(
+                    Vector2(
+                      _random.nextDouble() * spawnArea.size.x,
+                      _random.nextDouble() * spawnArea.size.y,
+                    ),
+                  );
+              await add(
+                PlanetComponent(
+                  position: randomPosition,
+                  anchor: Anchor.center,
+                  scale: Vector2.all(_random.nextDouble() * 0.5 + 0.25),
+                  children: [
+                    RotateEffect.by(
+                      2 * pi,
+                      EffectController(
+                        duration: _random.nextDouble() * 30 + 20,
+                        infinite: true,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            break;
         }
       }
     }
-
-    await add(
-      PlanetComponent(
-        position: Vector2(270, 200),
-        anchor: Anchor.center,
-        scale: Vector2.all(0.75),
-        children: [
-          RotateEffect.by(
-            2 * pi,
-            EffectController(duration: 10, infinite: true),
-          ),
-        ],
-      ),
-    );
-
-    await add(
-      PlanetComponent(
-        position: Vector2(800, 500),
-        anchor: Anchor.center,
-        scale: Vector2.all(0.75),
-      ),
-    );
-
-    await add(
-      PlanetComponent(
-        position: Vector2(1000, 200),
-        anchor: Anchor.center,
-        scale: Vector2.all(0.75),
-      ),
-    );
-
-    await add(
-      PlanetComponent(
-        position: Vector2(500, 500),
-        anchor: Anchor.center,
-        scale: Vector2.all(0.75),
-      ),
-    );
   }
 
   @override

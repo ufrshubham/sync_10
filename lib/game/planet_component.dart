@@ -13,10 +13,10 @@ class PlanetComponent extends PositionComponent with HasGameReference {
   });
 
   static const _planets = [
-    'Planet1.png',
-    'Planet2.png',
-    'Planet3.png',
-    'Planet4.png',
+    'Planet-1.png',
+    'Planet-2.png',
+    'Planet-3.png',
+    'Planet-4.png',
   ];
 
   static final _random = Random();
