@@ -1,8 +1,9 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame_game_jam_2025/game/game_play.dart';
 
-class StarNextComponent extends PositionComponent {
+class StarNextComponent extends PositionComponent with HasAncestor<Gameplay> {
   StarNextComponent({required super.size});
 
   late final FragmentShader _shader;
@@ -32,6 +33,8 @@ class StarNextComponent extends PositionComponent {
 
   @override
   void render(Canvas canvas) {
-    canvas.drawRect(Rect.fromLTWH(x, y, size.x, size.y), _paint);
+    if (CameraComponent.currentCamera == ancestor.camera) {
+      canvas.drawRect(Rect.fromLTWH(x, y, size.x, size.y), _paint);
+    }
   }
 }

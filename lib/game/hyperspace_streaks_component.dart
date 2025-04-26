@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame_game_jam_2025/game/game_play.dart';
 
-class HpyerspaceStreaksComponent extends PositionComponent {
+class HpyerspaceStreaksComponent extends PositionComponent
+    with HasAncestor<Gameplay> {
   HpyerspaceStreaksComponent({required super.size});
 
   late final FragmentShader _shader;
@@ -32,6 +34,8 @@ class HpyerspaceStreaksComponent extends PositionComponent {
 
   @override
   void render(Canvas canvas) {
-    canvas.drawRect(Rect.fromLTWH(x, y, size.x, size.y), _paint);
+    if (CameraComponent.currentCamera == ancestor.camera) {
+      canvas.drawRect(Rect.fromLTWH(x, y, size.x, size.y), _paint);
+    }
   }
 }
