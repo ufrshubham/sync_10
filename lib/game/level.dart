@@ -83,7 +83,9 @@ class Level extends PositionComponent
               position: p,
               input: _inputComponent,
               anchor: Anchor.center,
-              scale: Vector2.all(0.20),
+              scale: Vector2.all(0.5),
+              nativeAngle: pi,
+              angle: pi,
               children: [
                 BoundedPositionBehavior(
                   bounds: Rectangle.fromLTWH(16, 16, size.x - 32, size.y - 32),
