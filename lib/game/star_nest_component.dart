@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:sync_10/game/game_play.dart';
+import 'package:sync_10/routes/game_play.dart';
 
 class StarNextComponent extends PositionComponent with HasAncestor<Gameplay> {
   StarNextComponent({required super.size});

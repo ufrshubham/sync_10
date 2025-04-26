@@ -8,14 +8,11 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:sync_10/game/game.dart';
-import 'package:sync_10/game/game_play.dart';
-// import 'package:sync_10/game/hyperspace_streaks_component.dart';
-// import 'package:sync_10/game/hyperspace_tunnel_component.dart';
-import 'package:sync_10/game/input_component.dart';
 import 'package:sync_10/game/orb_component.dart';
 import 'package:sync_10/game/planet_component.dart';
 import 'package:sync_10/game/rocket_component.dart';
 import 'package:sync_10/game/star_nest_component.dart';
+import 'package:sync_10/routes/game_play.dart';
 
 class Level extends PositionComponent
     with HasTimeScale, HasAncestor<Gameplay>, HasGameReference<Sync10Game> {
@@ -36,7 +33,6 @@ class Level extends PositionComponent
   final String fileName;
   final Vector2 tileSize;
 
-  final _inputComponent = GamepadComponenet();
   late final PositionComponent _rocket;
 
   static final _random = Random();
@@ -56,8 +52,6 @@ class Level extends PositionComponent
     //   );
     //   add(hyperspaceTunnel);
     // }
-
-    await add(_inputComponent);
 
     final map = await TiledComponent.load(fileName, tileSize);
     size = map.size;
@@ -79,7 +73,6 @@ class Level extends PositionComponent
                 );
             _rocket = RocketComponent(
               position: randomPosition,
-              input: _inputComponent,
               anchor: Anchor.center,
               scale: Vector2.all(0.5),
               children: [
@@ -161,7 +154,7 @@ class Level extends PositionComponent
 
   void onFinish(Set<Vector2> intersectionPoints, ShapeHitbox other) {
     timeScale = 0.25;
-    _inputComponent.isListening = false;
+    ancestor.input.isListening = false;
 
     ancestor.fadeOut().then((_) {
       timeScale = 1;

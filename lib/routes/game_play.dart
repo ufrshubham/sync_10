@@ -2,17 +2,32 @@ import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sync_10/game/game.dart';
+import 'package:sync_10/game/input_component.dart';
 import 'package:sync_10/game/level.dart';
 
 enum CameraType { primary, miniMap, debug }
 
 class Gameplay extends Component with HasGameReference<Sync10Game> {
-  static final visibleGameSize = Vector2(1280, 720);
+  Gameplay(
+    this.currentLevel, {
+    required this.onPausePressed,
+    required this.onLevelCompleted,
+    required this.onGameOver,
+    super.key,
+  });
 
-  final int currentLevelIndex;
+  static final visibleGameSize = Vector2(1280, 720);
+  static const id = 'Gameplay';
+
+  final int currentLevel;
   final world = World();
   RectangleComponent? _fadeComponent;
+
+  final VoidCallback onPausePressed;
+  final ValueChanged<int> onLevelCompleted;
+  final VoidCallback onGameOver;
 
   late final cameras = <CameraType, CameraComponent>{
     CameraType.primary: CameraComponent.withFixedResolution(
@@ -40,7 +55,13 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
   CameraComponent get miniMap => cameras[CameraType.miniMap]!;
   CameraComponent? get debugCamera => cameras[CameraType.debug];
 
-  Gameplay(this.currentLevelIndex);
+  late final input = GamepadComponenet(
+    keyCallbacks: {
+      LogicalKeyboardKey.keyP: onPausePressed,
+      LogicalKeyboardKey.keyC: () => onLevelCompleted.call(3),
+      LogicalKeyboardKey.keyO: onGameOver,
+    },
+  );
 
   @override
   Future<void> onLoad() async {
@@ -54,7 +75,7 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
     await addAll([world, camera]);
 
     final level = Level('level.tmx', Vector2.all(16));
-    await world.add(level);
+    await world.addAll([level, input]);
 
     await camera.viewport.add(
       _fadeComponent = RectangleComponent(

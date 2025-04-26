@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 
 class InputComponent extends Component with KeyboardHandler {
+  InputComponent({Map<LogicalKeyboardKey, VoidCallback>? keyCallbacks})
+    : _keyCallbacks = keyCallbacks ?? <LogicalKeyboardKey, VoidCallback>{};
+
   double _vAxis = 0;
   double _hAxis = 0;
 
@@ -28,6 +31,8 @@ class InputComponent extends Component with KeyboardHandler {
   bool get boost => _boost;
   bool get slowDown => _slowDown;
   bool get fire => _fire;
+
+  final Map<LogicalKeyboardKey, VoidCallback> _keyCallbacks;
 
   @override
   void update(double dt) {
@@ -58,11 +63,22 @@ class InputComponent extends Component with KeyboardHandler {
     _slowDown =
         isListening && keysPressed.contains(LogicalKeyboardKey.shiftRight);
     _fire = isListening && keysPressed.contains(LogicalKeyboardKey.keyF);
+
+    if (isListening && event is KeyDownEvent) {
+      for (final entry in _keyCallbacks.entries) {
+        if (entry.key == event.logicalKey) {
+          entry.value.call();
+        }
+      }
+    }
+
     return super.onKeyEvent(event, keysPressed);
   }
 }
 
 class GamepadComponenet extends InputComponent {
+  GamepadComponenet({super.keyCallbacks});
+
   final _gamepadID1 = Platform.isLinux ? '/dev/input/js0' : '0';
   final _gamepadID2 = Platform.isLinux ? '/dev/input/js1' : '1';
 

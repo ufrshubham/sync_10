@@ -5,16 +5,14 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:sync_10/game/bullet_component.dart';
-import 'package:sync_10/game/game_play.dart';
-import 'package:sync_10/game/input_component.dart';
 import 'package:sync_10/game/level.dart';
 import 'package:sync_10/game/orb_component.dart';
 import 'package:sync_10/game/planet_component.dart';
+import 'package:sync_10/routes/game_play.dart';
 
 class RocketComponent extends PositionComponent
     with CollisionCallbacks, ParentIsA<Level>, HasAncestor<Gameplay> {
   RocketComponent({
-    required this.input,
     super.position,
     super.anchor,
     super.scale,
@@ -23,7 +21,6 @@ class RocketComponent extends PositionComponent
     super.angle,
   });
 
-  final InputComponent input;
   late final SpriteComponent _rocketSprite;
   // late final SpriteGroupComponent<_RocketFlameSprites> _rocketFlameSprite1;
   // late final SpriteGroupComponent<_RocketFlameSprites> _rocketFlameSprite2;
@@ -139,18 +136,18 @@ class RocketComponent extends PositionComponent
   }
 
   void _scaleFlames() {
-    final flameAdjustment = -input.hAxis * 0.25;
+    final flameAdjustment = -ancestor.input.hAxis * 0.25;
     _rocketFlameLeft.scale.y = _speedFactor - flameAdjustment;
     _rocketFlameRight.scale.y = _speedFactor + flameAdjustment;
   }
 
   void _handleSlowDown(double dt) {
-    if (input.slowDown) {
+    if (ancestor.input.slowDown) {
       parent.timeScale = 0.25;
       _angularSpeed =
           lerpDouble(
             _angularSpeed,
-            input.hAxis * _maxSlowDownAngularSpeed,
+            ancestor.input.hAxis * _maxSlowDownAngularSpeed,
             _maxSlowDownAngularAcceleration * dt,
           )!;
     } else {
@@ -158,20 +155,20 @@ class RocketComponent extends PositionComponent
       _angularSpeed =
           lerpDouble(
             _angularSpeed,
-            input.hAxis * _maxAngularSpeed,
+            ancestor.input.hAxis * _maxAngularSpeed,
             _angularAcceleration * dt,
           )!;
     }
   }
 
   void _handleBoost(double dt) {
-    if (input.boost) {
+    if (ancestor.input.boost) {
       _rocketFlameLeft.current = _RocketFlameSprites.flameBoost;
       _rocketFlameRight.current = _RocketFlameSprites.flameBoost;
       _speed =
           lerpDouble(
             _speed,
-            input.vAxis * _maxBoostSpeed,
+            ancestor.input.vAxis * _maxBoostSpeed,
             _maxBoostAcceleration * dt,
           )!;
 
@@ -179,7 +176,12 @@ class RocketComponent extends PositionComponent
     } else {
       _rocketFlameLeft.current = _RocketFlameSprites.flameNormal;
       _rocketFlameRight.current = _RocketFlameSprites.flameNormal;
-      _speed = lerpDouble(_speed, input.vAxis * _maxSpeed, _acceleration * dt)!;
+      _speed =
+          lerpDouble(
+            _speed,
+            ancestor.input.vAxis * _maxSpeed,
+            _acceleration * dt,
+          )!;
 
       _speedFactor = -_speed / _maxSpeed;
     }
@@ -209,7 +211,7 @@ class RocketComponent extends PositionComponent
   void _handleFire(double dt) {
     _timeSinceLastFire += dt;
 
-    if (input.fire && _timeSinceLastFire >= _fireDelay) {
+    if (ancestor.input.fire && _timeSinceLastFire >= _fireDelay) {
       final bullet = BulletComponent(
         position: position - _moveDirection * (_rocketSprite.height / 2),
         direction: -_moveDirection,

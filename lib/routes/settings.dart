@@ -1,54 +1,66 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sync_10/game/game.dart';
-import 'package:sync_10/routes/main_menu.dart';
 
 class Settings extends StatelessWidget {
-  static const id = 'Settings';
-  final Sync10Game game;
+  const Settings({
+    required this.musicValueListenable,
+    required this.sfxValueListenable,
+    super.key,
+    this.onMusicValueChanged,
+    this.onSfxValueChanged,
+    this.onBackPressed,
+  });
 
-  const Settings({required this.game, super.key});
+  static const id = 'Settings';
+
+  final ValueListenable<bool> musicValueListenable;
+  final ValueListenable<bool> sfxValueListenable;
+
+  final ValueChanged<bool>? onMusicValueChanged;
+  final ValueChanged<bool>? onSfxValueChanged;
+  final VoidCallback? onBackPressed;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Settings', style: TextStyle(fontSize: 40)),
-            const SizedBox(height: 20),
+            const Text('Settings', style: TextStyle(fontSize: 30)),
+            const SizedBox(height: 15),
             SizedBox(
-              width: 300,
+              width: 200,
               child: ValueListenableBuilder<bool>(
-                valueListenable: game.backgroundMusic,
-                builder:
-                    (context, value, child) => SwitchListTile(
-                      title: const Text('Music'),
-                      value: value,
-                      onChanged:
-                          (newValue) => game.backgroundMusic.value = newValue,
-                    ),
+                valueListenable: musicValueListenable,
+                builder: (BuildContext context, bool value, Widget? child) {
+                  return SwitchListTile(
+                    value: value,
+                    onChanged: onMusicValueChanged,
+                    title: child,
+                  );
+                },
+                child: const Text('Music'),
               ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 5),
             SizedBox(
-              width: 300,
+              width: 200,
               child: ValueListenableBuilder<bool>(
-                valueListenable: game.soundEffects,
-                builder:
-                    (context, value, child) => SwitchListTile(
-                      title: const Text('Sound effects'),
-                      value: value,
-                      onChanged:
-                          (newValue) => game.soundEffects.value = newValue,
-                    ),
+                valueListenable: sfxValueListenable,
+                builder: (BuildContext context, bool value, Widget? child) {
+                  return SwitchListTile(
+                    value: value,
+                    onChanged: onSfxValueChanged,
+                    title: child,
+                  );
+                },
+                child: const Text('Sfx'),
               ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 5),
             IconButton(
-              onPressed:
-                  () => game.router.pushNamed(MainMenu.id, replace: true),
+              onPressed: onBackPressed,
               icon: const Icon(Icons.arrow_back_rounded),
             ),
           ],
