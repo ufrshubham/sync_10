@@ -1,0 +1,46 @@
+import 'dart:async';
+import 'dart:ui';
+
+import 'package:flame/collisions.dart';
+import 'package:flame/components.dart';
+
+class BulletComponent extends PositionComponent {
+  BulletComponent({required super.position, required Vector2 direction})
+    : _direction = direction.clone();
+
+  final double _speed = 500.0;
+  final Vector2 _direction;
+
+  @override
+  Future<void> onLoad() async {
+    size = Vector2(5, 60);
+
+    await add(
+      RectangleComponent(
+        anchor: Anchor.center,
+        size: size,
+        angle: _direction.screenAngle(),
+        paint:
+            Paint()
+              ..shader = Gradient.linear(Offset.zero, Offset(0, size.y), [
+                const Color.fromARGB(255, 196, 3, 3),
+                const Color.fromARGB(0, 255, 0, 0),
+              ]),
+      ),
+    );
+
+    await add(
+      RectangleHitbox(
+        anchor: Anchor.center,
+        size: size,
+        angle: _direction.screenAngle(),
+      ),
+    );
+  }
+
+  @override
+  void update(double dt) {
+    position += _direction.normalized() * _speed * dt;
+    super.update(dt);
+  }
+}

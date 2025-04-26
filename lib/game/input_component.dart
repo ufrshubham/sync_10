@@ -14,6 +14,7 @@ class InputComponent extends Component with KeyboardHandler {
   bool _right = false;
   bool _boost = false;
   bool _slowDown = false;
+  bool _fire = false;
 
   double _upInput = 0;
   double _downInput = 0;
@@ -26,6 +27,7 @@ class InputComponent extends Component with KeyboardHandler {
   double get hAxis => _hAxis;
   bool get boost => _boost;
   bool get slowDown => _slowDown;
+  bool get fire => _fire;
 
   @override
   void update(double dt) {
@@ -52,9 +54,10 @@ class InputComponent extends Component with KeyboardHandler {
     _left = isListening && keysPressed.contains(LogicalKeyboardKey.keyA);
     _right = isListening && keysPressed.contains(LogicalKeyboardKey.keyD);
 
-    _boost = isListening && keysPressed.contains(LogicalKeyboardKey.space);
+    _boost = isListening && keysPressed.contains(LogicalKeyboardKey.keyB);
     _slowDown =
         isListening && keysPressed.contains(LogicalKeyboardKey.shiftRight);
+    _fire = isListening && keysPressed.contains(LogicalKeyboardKey.keyF);
     return super.onKeyEvent(event, keysPressed);
   }
 }

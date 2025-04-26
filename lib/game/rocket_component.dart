@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:sync_10/game/bullet_component.dart';
 import 'package:sync_10/game/game_play.dart';
 import 'package:sync_10/game/input_component.dart';
 import 'package:sync_10/game/level.dart';
@@ -37,6 +38,7 @@ class RocketComponent extends PositionComponent
   var _speedFactor = 0.0;
   var _angularSpeed = 0.0;
   var _nOrbsCollected = 0;
+  var _timeSinceLastFire = 0.0;
 
   final _moveDirection = Vector2(0, 0);
 
@@ -48,12 +50,14 @@ class RocketComponent extends PositionComponent
   static const _angularAcceleration = 1;
   static const _maxSlowDownAngularSpeed = 4.0;
   static const _maxSlowDownAngularAcceleration = 2.0;
+  static const _fireDelay = 0.5;
 
   int get nOrbsCollected => _nOrbsCollected;
 
   @override
   Future<void> onLoad() async {
     _rocketSprite = SpriteComponent(
+      scale: Vector2.all(0.75),
       sprite: await Sprite.load('Spaceship.png'),
       anchor: Anchor.center,
     );
@@ -76,7 +80,7 @@ class RocketComponent extends PositionComponent
       position: Vector2(_rocketSprite.width * 0.1, _rocketSprite.height),
       animations: animation,
       scale: Vector2(0.3, 0.25),
-    )..opacity = 0.25;
+    )..opacity = 0.8;
 
     _rocketFlameRight = SpriteAnimationGroupComponent<_RocketFlameSprites>(
       anchor: Anchor.topCenter,
@@ -84,7 +88,7 @@ class RocketComponent extends PositionComponent
       position: Vector2(_rocketSprite.width * 0.9, _rocketSprite.height),
       animations: animation,
       scale: Vector2(0.3, 0.25),
-    )..opacity = 0.25;
+    )..opacity = 0.8;
 
     await _rocketSprite.add(_rocketFlameLeft);
     await _rocketSprite.add(_rocketFlameRight);
@@ -99,7 +103,11 @@ class RocketComponent extends PositionComponent
 
   @override
   void update(double dt) {
+    _handleBoost(dt);
+    _handleSlowDown(dt);
     _updatePosition(dt);
+    _scaleFlames();
+    _handleFire(dt);
   }
 
   @override
@@ -116,6 +124,47 @@ class RocketComponent extends PositionComponent
   }
 
   void _updatePosition(double dt) {
+    _rocketSprite.angle += _angularSpeed * dt;
+    _hitbox.angle = _rocketSprite.angle;
+
+    _moveDirection.setValues(
+      -sin(_rocketSprite.angle),
+      cos(_rocketSprite.angle),
+    );
+
+    position.setValues(
+      x + _moveDirection.x * _speed * dt,
+      y + _moveDirection.y * _speed * dt,
+    );
+  }
+
+  void _scaleFlames() {
+    final flameAdjustment = -input.hAxis * 0.25;
+    _rocketFlameLeft.scale.y = _speedFactor - flameAdjustment;
+    _rocketFlameRight.scale.y = _speedFactor + flameAdjustment;
+  }
+
+  void _handleSlowDown(double dt) {
+    if (input.slowDown) {
+      parent.timeScale = 0.25;
+      _angularSpeed =
+          lerpDouble(
+            _angularSpeed,
+            input.hAxis * _maxSlowDownAngularSpeed,
+            _maxSlowDownAngularAcceleration * dt,
+          )!;
+    } else {
+      parent.timeScale = 1.0;
+      _angularSpeed =
+          lerpDouble(
+            _angularSpeed,
+            input.hAxis * _maxAngularSpeed,
+            _angularAcceleration * dt,
+          )!;
+    }
+  }
+
+  void _handleBoost(double dt) {
     if (input.boost) {
       _rocketFlameLeft.current = _RocketFlameSprites.flameBoost;
       _rocketFlameRight.current = _RocketFlameSprites.flameBoost;
@@ -134,41 +183,6 @@ class RocketComponent extends PositionComponent
 
       _speedFactor = -_speed / _maxSpeed;
     }
-
-    if (input.slowDown) {
-      parent.timeScale = 0.25;
-      _angularSpeed =
-          lerpDouble(
-            _angularSpeed,
-            input.hAxis * _maxSlowDownAngularSpeed,
-            _maxSlowDownAngularAcceleration * dt,
-          )!;
-    } else {
-      parent.timeScale = 1.0;
-      _angularSpeed =
-          lerpDouble(
-            _angularSpeed,
-            input.hAxis * _maxAngularSpeed,
-            _angularAcceleration * dt,
-          )!;
-    }
-
-    _rocketSprite.angle += _angularSpeed * dt;
-    _hitbox.angle = _rocketSprite.angle;
-
-    _moveDirection.setValues(
-      -sin(_rocketSprite.angle),
-      cos(_rocketSprite.angle),
-    );
-
-    position.setValues(
-      x + _moveDirection.x * _speed * dt,
-      y + _moveDirection.y * _speed * dt,
-    );
-
-    final flameAdjustment = -input.hAxis * 0.25;
-    _rocketFlameLeft.scale.y = _speedFactor - flameAdjustment;
-    _rocketFlameRight.scale.y = _speedFactor + flameAdjustment;
   }
 
   @override
@@ -190,6 +204,19 @@ class RocketComponent extends PositionComponent
     super.onCollisionEnd(other);
 
     if (other is PlanetComponent) {}
+  }
+
+  void _handleFire(double dt) {
+    _timeSinceLastFire += dt;
+
+    if (input.fire && _timeSinceLastFire >= _fireDelay) {
+      final bullet = BulletComponent(
+        position: position - _moveDirection * (_rocketSprite.height / 2),
+        direction: -_moveDirection,
+      );
+      parent.add(bullet);
+      _timeSinceLastFire = 0;
+    }
   }
 }
 
