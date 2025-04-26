@@ -19,7 +19,7 @@ class MainMenu extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Sync:10',
+              'SYNC:[10]',
               style: TextStyle(fontSize: 40, color: Colors.white),
             ),
             const SizedBox(height: 20),
