@@ -6,23 +6,22 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
-
-import 'package:flame_game_jam_2025/game/game.dart';
-import 'package:flame_game_jam_2025/game/game_play.dart';
-// import 'package:flame_game_jam_2025/game/hyperspace_streaks_component.dart';
-// import 'package:flame_game_jam_2025/game/hyperspace_tunnel_component.dart';
-import 'package:flame_game_jam_2025/game/input_component.dart';
-import 'package:flame_game_jam_2025/game/orb_component.dart';
-import 'package:flame_game_jam_2025/game/planet_component.dart';
-import 'package:flame_game_jam_2025/game/rocket_component.dart';
-import 'package:flame_game_jam_2025/game/star_nest_component.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:sync_10/game/game.dart';
+import 'package:sync_10/game/game_play.dart';
+// import 'package:sync_10/game/hyperspace_streaks_component.dart';
+// import 'package:sync_10/game/hyperspace_tunnel_component.dart';
+import 'package:sync_10/game/input_component.dart';
+import 'package:sync_10/game/orb_component.dart';
+import 'package:sync_10/game/planet_component.dart';
+import 'package:sync_10/game/rocket_component.dart';
+import 'package:sync_10/game/star_nest_component.dart';
 
 class Level extends PositionComponent
     with
         HasTimeScale,
         HasAncestor<Gameplay>,
-        HasGameReference<TheSpaceRaceGame> {
+        HasGameReference<Sync10Game> {
   Level(
     this.fileName,
     this.tileSize, {

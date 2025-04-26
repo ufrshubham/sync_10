@@ -1,13 +1,13 @@
 import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flame_game_jam_2025/game/game.dart';
-import 'package:flame_game_jam_2025/game/level.dart';
 import 'package:flutter/material.dart';
+import 'package:sync_10/game/game.dart';
+import 'package:sync_10/game/level.dart';
 
 enum CameraType { primary, miniMap, debug }
 
-class Gameplay extends Component with HasGameReference<TheSpaceRaceGame> {
+class Gameplay extends Component with HasGameReference<Sync10Game> {
   static final visibleGameSize = Vector2(1280, 720);
 
   final int currentLevelIndex;

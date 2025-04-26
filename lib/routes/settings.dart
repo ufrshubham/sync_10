@@ -1,10 +1,10 @@
-import 'package:flame_game_jam_2025/game/game.dart';
-import 'package:flame_game_jam_2025/routes/main_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:sync_10/game/game.dart';
+import 'package:sync_10/routes/main_menu.dart';
 
 class Settings extends StatelessWidget {
   static const id = 'Settings';
-  final TheSpaceRaceGame game;
+  final Sync10Game game;
 
   const Settings({required this.game, super.key});
 

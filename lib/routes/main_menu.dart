@@ -1,12 +1,12 @@
 import 'package:flame/game.dart';
-import 'package:flame_game_jam_2025/game/game.dart';
-import 'package:flame_game_jam_2025/game/game_play.dart';
-import 'package:flame_game_jam_2025/routes/settings.dart';
 import 'package:flutter/material.dart' hide Route;
+import 'package:sync_10/game/game.dart';
+import 'package:sync_10/game/game_play.dart';
+import 'package:sync_10/routes/settings.dart';
 
 class MainMenu extends StatelessWidget {
   static const id = 'MainMenu';
-  final TheSpaceRaceGame game;
+  final Sync10Game game;
 
   const MainMenu({required this.game, super.key});
 
@@ -19,7 +19,7 @@ class MainMenu extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'The Space Race',
+              'Sync:10',
               style: TextStyle(fontSize: 40, color: Colors.white),
             ),
             const SizedBox(height: 20),

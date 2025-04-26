@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flame_game_jam_2025/routes/level_selection.dart';
-import 'package:flame_game_jam_2025/routes/main_menu.dart';
-import 'package:flame_game_jam_2025/routes/settings.dart';
 import 'package:flutter/foundation.dart';
+import 'package:sync_10/routes/level_selection.dart';
+import 'package:sync_10/routes/main_menu.dart';
+import 'package:sync_10/routes/settings.dart';
 
-class TheSpaceRaceGame extends FlameGame
+class Sync10Game extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   final soundEffects = ValueNotifier(true);
   final backgroundMusic = ValueNotifier(true);
@@ -16,22 +17,22 @@ class TheSpaceRaceGame extends FlameGame
     initialRoute: MainMenu.id,
     routes: {
       MainMenu.id: OverlayRoute(
-        (context, game) => MainMenu(game: game as TheSpaceRaceGame),
+        (context, game) => MainMenu(game: game as Sync10Game),
       ),
       Settings.id: OverlayRoute(
-        (context, game) => Settings(game: game as TheSpaceRaceGame),
+        (context, game) => Settings(game: game as Sync10Game),
       ),
       LevelSelection.id: OverlayRoute(
-        (context, game) => LevelSelection(game: game as TheSpaceRaceGame),
+        (context, game) => LevelSelection(game: game as Sync10Game),
       ),
       // PauseMenu.id: OverlayRoute(
-      //   (context, game) => PauseMenu(game: game as TheSpaceRaceGame),
+      //   (context, game) => PauseMenu(game: game as Sync10Game),
       // ),
       // GameOver.id: OverlayRoute(
-      //   (context, game) => GameOver(game: game as TheSpaceRaceGame),
+      //   (context, game) => GameOver(game: game as Sync10Game),
       // ),
       // LevelComplete.id: OverlayRoute(
-      //   (context, game) => LevelComplete(game: game as TheSpaceRaceGame),
+      //   (context, game) => LevelComplete(game: game as Sync10Game),
       // ),
     },
   );

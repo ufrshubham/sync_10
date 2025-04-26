@@ -3,12 +3,12 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_game_jam_2025/game/game_play.dart';
-import 'package:flame_game_jam_2025/game/input_component.dart';
-import 'package:flame_game_jam_2025/game/level.dart';
-import 'package:flame_game_jam_2025/game/orb_component.dart';
-import 'package:flame_game_jam_2025/game/planet_component.dart';
 import 'package:flutter/material.dart';
+import 'package:sync_10/game/game_play.dart';
+import 'package:sync_10/game/input_component.dart';
+import 'package:sync_10/game/level.dart';
+import 'package:sync_10/game/orb_component.dart';
+import 'package:sync_10/game/planet_component.dart';
 
 class RocketComponent extends PositionComponent
     with CollisionCallbacks, ParentIsA<Level>, HasAncestor<Gameplay> {

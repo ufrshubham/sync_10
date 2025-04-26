@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:flame_game_jam_2025/game/game_play.dart';
+import 'package:sync_10/game/game_play.dart';
 
 class HpyerspaceTunnelComponent extends PositionComponent
     with HasAncestor<Gameplay> {
