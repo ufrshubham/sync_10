@@ -3,8 +3,9 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:sync_10/game/level.dart';
 
-class BulletComponent extends PositionComponent {
+class BulletComponent extends PositionComponent with ParentIsA<Level> {
   BulletComponent({required super.position, required Vector2 direction})
     : _direction = direction.clone();
 
@@ -41,6 +42,10 @@ class BulletComponent extends PositionComponent {
   @override
   void update(double dt) {
     position += _direction.normalized() * _speed * dt;
-    super.update(dt);
+    if (position.x < 0 || position.x > parent.size.x) {
+      removeFromParent();
+    } else if (position.y < 0 || position.y > parent.size.y) {
+      removeFromParent();
+    }
   }
 }
