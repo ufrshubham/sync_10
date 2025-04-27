@@ -146,6 +146,7 @@ class SpaceshipComponent extends PositionComponent
     if (other is PlanetComponent) {
       if (other.isShaking == false) {
         _health = clampDouble(_health - other.damageValue, 0, 100);
+        ancestor.updateHealthBar(_health);
         if (intersectionPoints.length == 2) {
           final mid =
               (intersectionPoints.elementAt(0) +

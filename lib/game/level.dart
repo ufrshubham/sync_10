@@ -11,7 +11,7 @@ import 'package:sync_10/game/game.dart';
 import 'package:sync_10/game/health_pickup_component.dart';
 import 'package:sync_10/game/orb_component.dart';
 import 'package:sync_10/game/planet_component.dart';
-import 'package:sync_10/game/rocket_component.dart';
+import 'package:sync_10/game/spaceship_component.dart';
 import 'package:sync_10/game/star_nest_component.dart';
 import 'package:sync_10/routes/game_play.dart';
 
@@ -129,7 +129,10 @@ class Level extends PositionComponent
             final healthSpawner = SpawnComponent(
               period: 15,
               factory: (amount) {
-                return HealthPickupComponent(anchor: Anchor.center);
+                return HealthPickupComponent(
+                  anchor: Anchor.center,
+                  scale: Vector2.all(0.4),
+                );
               },
               area: Rectangle.fromLTWH(
                 spawnArea.position.x,
@@ -137,7 +140,7 @@ class Level extends PositionComponent
                 spawnArea.size.x,
                 spawnArea.size.y,
               ),
-            )..debugMode = true;
+            );
 
             await add(healthSpawner);
             break;
@@ -172,7 +175,7 @@ class Level extends PositionComponent
           20,
     );
 
-    // TODO: Add a background to the miniMap
+    // TODO(devkage): Add a background to the miniMap.
     // ancestor.miniMap.backdrop.add(
     //   SpriteComponent(
     //     sprite: Sprite(game.images.fromCache('Planet-1.png')),

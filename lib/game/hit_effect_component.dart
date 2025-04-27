@@ -13,7 +13,7 @@ class HitEffectComponent extends PositionComponent {
   @override
   Future<void> onLoad() async {
     final hitSprite = SpriteComponent(
-      sprite: await Sprite.load('HitEffect.png'),
+      sprite: await Sprite.load('HitEffect-1.png'),
       anchor: Anchor.topCenter,
       scale: Vector2.zero(),
       children: [

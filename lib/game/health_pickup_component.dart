@@ -1,30 +1,47 @@
-import 'dart:ui';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
+import 'package:flutter/animation.dart';
 
 class HealthPickupComponent extends PositionComponent {
   HealthPickupComponent({
     super.position,
     super.anchor,
-    super.scale,
+    Vector2? scale,
     super.children,
-  });
+  }) : _scale = scale ?? Vector2.all(1.0);
 
   double get healthValue => 20.0;
+  final Vector2 _scale;
 
   @override
   Future<void> onLoad() async {
-    await add(
-      CircleComponent(
-        radius: 128 * 0.5,
-        anchor: Anchor.center,
-        paint: Paint()..color = const Color.fromARGB(255, 89, 0, 253),
-      ),
+    final glassSprite = SpriteComponent(
+      sprite: await Sprite.load('CollectableGlass.png'),
+      anchor: Anchor.center,
+      scale: _scale,
+    )..opacity = 0.3;
+    final healthSprite = SpriteComponent(
+      sprite: await Sprite.load('CollectableHeart.png'),
+      anchor: Anchor.center,
+      scale: _scale * 0.6,
+      children: [
+        ScaleEffect.to(
+          _scale * 0.8,
+          EffectController(
+            duration: 0.8,
+            infinite: true,
+            alternate: true,
+            curve: Curves.easeInOut,
+          ),
+        ),
+      ],
     );
+
+    await addAll([healthSprite, glassSprite]);
     await add(
       CircleHitbox(
-        radius: 128 * 0.5,
+        radius: glassSprite.size.x * 0.5 * _scale.x * 0.9,
         anchor: Anchor.center,
         collisionType: CollisionType.passive,
       ),
