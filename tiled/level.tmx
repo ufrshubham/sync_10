@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="20">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="29">
  <editorsettings>
   <export target="../assets/tiles/level.tmx" format="tmx"/>
  </editorsettings>
@@ -218,5 +218,14 @@
   <object id="17" name="Orb" type="Orb" x="256" y="1104" width="320" height="320"/>
   <object id="13" name="Orb" type="Orb" x="1936" y="2560" width="320" height="320"/>
   <object id="19" name="Planet" type="Planet" x="160" y="160" width="2896" height="2880"/>
+  <object id="20" name="HealthPickup" type="HealthPickup" x="416" y="432" width="464" height="368"/>
+  <object id="21" name="HealthPickup" type="HealthPickup" x="1568" y="272" width="464" height="368"/>
+  <object id="28" name="HealthPickup" type="HealthPickup" x="1104" y="2416" width="464" height="368"/>
+  <object id="22" name="HealthPickup" type="HealthPickup" x="512" y="1008" width="464" height="368"/>
+  <object id="23" name="HealthPickup" type="HealthPickup" x="224" y="1888" width="464" height="368"/>
+  <object id="24" name="HealthPickup" type="HealthPickup" x="2384" y="608" width="464" height="368"/>
+  <object id="25" name="HealthPickup" type="HealthPickup" x="2432" y="1792" width="464" height="368"/>
+  <object id="26" name="HealthPickup" type="HealthPickup" x="2240" y="2400" width="464" height="368"/>
+  <object id="27" name="HealthPickup" type="HealthPickup" x="2240" y="2400" width="464" height="368"/>
  </objectgroup>
 </map>

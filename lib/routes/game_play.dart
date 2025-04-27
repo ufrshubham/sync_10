@@ -4,6 +4,7 @@ import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sync_10/game/game.dart';
+import 'package:sync_10/game/hud_componenet.dart';
 import 'package:sync_10/game/input_component.dart';
 import 'package:sync_10/game/level.dart';
 
@@ -36,14 +37,18 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
       world: world,
     ),
     CameraType.miniMap: CameraComponent(
-      viewport: CircularViewport(Gameplay.visibleGameSize.x * 0.07),
-      viewfinder: Viewfinder()..zoom = 0.125,
+      viewport: CircularViewport(Gameplay.visibleGameSize.x * 0.07)
+        ..priority = 10,
+      viewfinder:
+          Viewfinder()
+            ..zoom = 0.125
+            ..priority = 10,
       world: world,
       backdrop: RectangleComponent(
         size: Gameplay.visibleGameSize,
         paint: Paint()..color = Colors.black.withValues(alpha: 0.8),
       ),
-    ),
+    )..priority = 10,
     CameraType.debug: CameraComponent.withFixedResolution(
       width: visibleGameSize.x * 15,
       height: visibleGameSize.y * 15,
@@ -55,6 +60,7 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
   CameraComponent get miniMap => cameras[CameraType.miniMap]!;
   CameraComponent? get debugCamera => cameras[CameraType.debug];
 
+  late final HudComponent _hud;
   late final input = GamepadComponenet(
     keyCallbacks: {
       LogicalKeyboardKey.keyP: onPausePressed,
@@ -77,12 +83,15 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
     final level = Level('level.tmx', Vector2.all(16));
     await world.addAll([level, input]);
 
-    await camera.viewport.add(
+    _hud = HudComponent();
+
+    await camera.viewport.addAll([
       _fadeComponent = RectangleComponent(
         size: visibleGameSize,
         paint: Paint()..color = game.backgroundColor(),
       ),
-    );
+      _hud,
+    ]);
 
     // ignore: dead_code
     // if (seeDebug) {
@@ -104,5 +113,9 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
 
   void levelComplete() {
     // game.router.pushNamed(GameOver.id, replace: true);
+  }
+
+  void updateHealthBar(double health) {
+    _hud.updateHealthBar(health);
   }
 }

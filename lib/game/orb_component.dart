@@ -2,8 +2,9 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sync_10/game/planet_component.dart';
 
-class OrbComponent extends PositionComponent {
+class OrbComponent extends PositionComponent with CollisionCallbacks {
   OrbComponent({
     super.position,
     super.size,
@@ -37,12 +38,18 @@ class OrbComponent extends PositionComponent {
       ),
     );
 
-    await add(
-      CircleHitbox(
-        radius: 20,
-        anchor: Anchor.center,
-        collisionType: CollisionType.passive,
-      ),
-    );
+    await add(CircleHitbox(radius: 20, anchor: Anchor.center));
+  }
+
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    if (other is PlanetComponent) {
+      other.removeFromParent();
+    }
+
+    super.onCollisionStart(intersectionPoints, other);
   }
 }

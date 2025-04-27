@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flame/camera.dart';
 import 'package:flame/collisions.dart';
@@ -7,7 +8,9 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:flutter/material.dart';
 import 'package:sync_10/game/game.dart';
+import 'package:sync_10/game/health_pickup_component.dart';
 import 'package:sync_10/game/orb_component.dart';
 import 'package:sync_10/game/planet_component.dart';
 import 'package:sync_10/game/rocket_component.dart';
@@ -74,7 +77,7 @@ class Level extends PositionComponent
             _rocket = SpaceshipComponent(
               position: randomPosition,
               anchor: Anchor.center,
-              scale: Vector2.all(0.5),
+              scale: Vector2.all(0.3),
               children: [
                 BoundedPositionBehavior(
                   bounds: Rectangle.fromLTWH(16, 16, size.x - 32, size.y - 32),
@@ -122,7 +125,23 @@ class Level extends PositionComponent
                 ),
               );
             }
+            break;
 
+          case 'HealthPickup':
+            final healthSpawner = SpawnComponent(
+              period: 15,
+              factory: (amount) {
+                return HealthPickupComponent(anchor: Anchor.center);
+              },
+              area: Rectangle.fromLTWH(
+                spawnArea.position.x,
+                spawnArea.position.y,
+                spawnArea.size.x,
+                spawnArea.size.y,
+              ),
+            )..debugMode = true;
+
+            await add(healthSpawner);
             break;
         }
       }
@@ -146,9 +165,13 @@ class Level extends PositionComponent
 
     ancestor.miniMap.follow(_rocket);
     ancestor.camera.viewport.add(ancestor.miniMap);
+
     ancestor.miniMap.viewport.position = Vector2(
       20,
-      ancestor.camera.viewport.size.y - ancestor.miniMap.viewport.size.y,
+
+      ancestor.camera.viewport.virtualSize.y -
+          ancestor.miniMap.viewport.virtualSize.y -
+          20,
     );
   }
 

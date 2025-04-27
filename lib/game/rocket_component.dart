@@ -3,8 +3,8 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
 import 'package:sync_10/game/bullet_component.dart';
+import 'package:sync_10/game/health_pickup_component.dart';
 import 'package:sync_10/game/level.dart';
 import 'package:sync_10/game/orb_component.dart';
 import 'package:sync_10/game/planet_component.dart';
@@ -17,13 +17,12 @@ class SpaceshipComponent extends PositionComponent
   SpaceshipComponent({
     super.position,
     super.anchor,
-    super.scale,
     super.children,
     super.nativeAngle,
     super.angle,
-  });
+    Vector2? scale,
+  }) : _scale = scale ?? Vector2.all(1.0);
 
-  late final RectangleHitbox _hitbox;
   late final SpriteComponent _spaceShipSprite;
 
   late final SpriteAnimationGroupComponent<_FlameSprites> _flameLeft;
@@ -34,8 +33,10 @@ class SpaceshipComponent extends PositionComponent
   var _angularSpeed = 0.0;
   var _nOrbsCollected = 0;
   var _timeSinceLastFire = 0.0;
+  var _health = 100.0;
 
   final _moveDirection = Vector2(0, 0);
+  final Vector2 _scale;
 
   static const _maxSpeed = 80.0;
   static const _acceleration = 1;
@@ -48,24 +49,100 @@ class SpaceshipComponent extends PositionComponent
   static const _fireDelay = 0.5;
 
   int get nOrbsCollected => _nOrbsCollected;
+  double get health => _health;
 
   @override
   Future<void> onLoad() async {
     _spaceShipSprite = SpriteComponent(
-      scale: Vector2.all(0.75),
       sprite: await Sprite.load('Spaceship.png'),
       anchor: Anchor.center,
+      scale: _scale,
     );
     await add(_spaceShipSprite);
 
     await _setupFlames();
 
     await add(
-      _hitbox = RectangleHitbox(
-        size: _spaceShipSprite.size,
+      CircleHitbox(
+        radius: _spaceShipSprite.size.x * 0.3 * _scale.x,
         anchor: Anchor.center,
       ),
     );
+  }
+
+  @override
+  void update(double dt) {
+    _handleBoost(dt);
+    _handleSlowDown(dt);
+    _updatePosition(dt);
+    _scaleFlames();
+    _handleFire(dt);
+  }
+
+  @override
+  void renderTree(Canvas canvas) {
+    if (CameraComponent.currentCamera == ancestor.camera) {
+      super.renderTree(canvas);
+    } else {
+      final path = Path();
+      const triangleSize = 60.0;
+
+      // Calculate the triangle points
+      final tip = Offset(
+        position.x - _moveDirection.x * triangleSize,
+        position.y - _moveDirection.y * triangleSize,
+      );
+      final baseLeft = Offset(
+        position.x - _moveDirection.y * (triangleSize / 2),
+        position.y + _moveDirection.x * (triangleSize / 2),
+      );
+      final baseRight = Offset(
+        position.x + _moveDirection.y * (triangleSize / 2),
+        position.y - _moveDirection.x * (triangleSize / 2),
+      );
+
+      // Create the triangle path
+      path.moveTo(tip.dx, tip.dy);
+      path.lineTo(baseLeft.dx, baseLeft.dy);
+      path.lineTo(baseRight.dx, baseRight.dy);
+      path.close();
+
+      // Draw the triangle
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = const Color.fromARGB(255, 208, 255, 0)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 10.0,
+      );
+    }
+  }
+
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    super.onCollisionStart(intersectionPoints, other);
+
+    if (other is PlanetComponent) {
+      _health = clampDouble(_health - other.damageValue, 0, 100);
+      ancestor.updateHealthBar(_health);
+    } else if (other is OrbComponent) {
+      other.removeFromParent();
+      _nOrbsCollected++;
+    } else if (other is HealthPickupComponent) {
+      other.removeFromParent();
+      _health = clampDouble(_health + other.healthValue, 0, 100);
+      ancestor.updateHealthBar(_health);
+    }
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+
+    if (other is PlanetComponent) {}
   }
 
   Future<void> _setupFlames() async {
@@ -110,31 +187,8 @@ class SpaceshipComponent extends PositionComponent
     await _spaceShipSprite.add(_flameRight);
   }
 
-  @override
-  void update(double dt) {
-    _handleBoost(dt);
-    _handleSlowDown(dt);
-    _updatePosition(dt);
-    _scaleFlames();
-    _handleFire(dt);
-  }
-
-  @override
-  void renderTree(Canvas canvas) {
-    if (CameraComponent.currentCamera == ancestor.camera) {
-      super.renderTree(canvas);
-    } else {
-      canvas.drawCircle(
-        Offset(position.x, position.y),
-        50,
-        Paint()..color = Colors.white.withValues(alpha: 0.5),
-      );
-    }
-  }
-
   void _updatePosition(double dt) {
     _spaceShipSprite.angle += _angularSpeed * dt;
-    _hitbox.angle = _spaceShipSprite.angle;
 
     _moveDirection.setValues(
       -sin(_spaceShipSprite.angle),
@@ -197,27 +251,6 @@ class SpaceshipComponent extends PositionComponent
 
       _speedFactor = -_speed / _maxSpeed;
     }
-  }
-
-  @override
-  void onCollisionStart(
-    Set<Vector2> intersectionPoints,
-    PositionComponent other,
-  ) {
-    super.onCollisionStart(intersectionPoints, other);
-
-    if (other is PlanetComponent) {
-    } else if (other is OrbComponent) {
-      other.removeFromParent();
-      _nOrbsCollected++;
-    }
-  }
-
-  @override
-  void onCollisionEnd(PositionComponent other) {
-    super.onCollisionEnd(other);
-
-    if (other is PlanetComponent) {}
   }
 
   void _handleFire(double dt) {
