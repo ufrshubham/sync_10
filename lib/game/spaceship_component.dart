@@ -9,8 +9,8 @@ import 'package:sync_10/game/fuel_pickup_component.dart';
 import 'package:sync_10/game/health_pickup_component.dart';
 import 'package:sync_10/game/hit_effect_component.dart';
 import 'package:sync_10/game/level.dart';
-import 'package:sync_10/game/syncron_component.dart';
 import 'package:sync_10/game/planet_component.dart';
+import 'package:sync_10/game/syncron_component.dart';
 import 'package:sync_10/routes/game_play.dart';
 
 enum _FlameSprites { flameNormal, flameBoost }
