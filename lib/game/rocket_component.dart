@@ -10,9 +10,11 @@ import 'package:sync_10/game/orb_component.dart';
 import 'package:sync_10/game/planet_component.dart';
 import 'package:sync_10/routes/game_play.dart';
 
-class RocketComponent extends PositionComponent
+enum _FlameSprites { flameNormal, flameBoost }
+
+class SpaceshipComponent extends PositionComponent
     with CollisionCallbacks, ParentIsA<Level>, HasAncestor<Gameplay> {
-  RocketComponent({
+  SpaceshipComponent({
     super.position,
     super.anchor,
     super.scale,
@@ -21,15 +23,11 @@ class RocketComponent extends PositionComponent
     super.angle,
   });
 
-  late final SpriteComponent _rocketSprite;
-  // late final SpriteGroupComponent<_RocketFlameSprites> _rocketFlameSprite1;
-  // late final SpriteGroupComponent<_RocketFlameSprites> _rocketFlameSprite2;
   late final RectangleHitbox _hitbox;
+  late final SpriteComponent _spaceShipSprite;
 
-  late final SpriteAnimationGroupComponent<_RocketFlameSprites>
-  _rocketFlameLeft;
-  late final SpriteAnimationGroupComponent<_RocketFlameSprites>
-  _rocketFlameRight;
+  late final SpriteAnimationGroupComponent<_FlameSprites> _flameLeft;
+  late final SpriteAnimationGroupComponent<_FlameSprites> _flameRight;
 
   var _speed = 0.0;
   var _speedFactor = 0.0;
@@ -53,46 +51,46 @@ class RocketComponent extends PositionComponent
 
   @override
   Future<void> onLoad() async {
-    _rocketSprite = SpriteComponent(
+    _spaceShipSprite = SpriteComponent(
       scale: Vector2.all(0.75),
       sprite: await Sprite.load('Spaceship.png'),
       anchor: Anchor.center,
     );
-    await add(_rocketSprite);
+    await add(_spaceShipSprite);
 
     final animation = {
-      _RocketFlameSprites.flameNormal: SpriteAnimation.spriteList([
+      _FlameSprites.flameNormal: SpriteAnimation.spriteList([
         await Sprite.load('SpaceshipFlamesLow-1.png'),
         await Sprite.load('SpaceshipFlamesLow-2.png'),
       ], stepTime: 0.1),
-      _RocketFlameSprites.flameBoost: SpriteAnimation.spriteList([
+      _FlameSprites.flameBoost: SpriteAnimation.spriteList([
         await Sprite.load('SpaceshipFlamesHigh-1.png'),
         await Sprite.load('SpaceshipFlamesHigh-2.png'),
       ], stepTime: 0.1),
     };
 
-    _rocketFlameLeft = SpriteAnimationGroupComponent<_RocketFlameSprites>(
+    _flameLeft = SpriteAnimationGroupComponent<_FlameSprites>(
       anchor: Anchor.topCenter,
-      current: _RocketFlameSprites.flameNormal,
-      position: Vector2(_rocketSprite.width * 0.1, _rocketSprite.height),
+      current: _FlameSprites.flameNormal,
+      position: Vector2(_spaceShipSprite.width * 0.1, _spaceShipSprite.height),
       animations: animation,
       scale: Vector2(0.3, 0.25),
     )..opacity = 0.8;
 
-    _rocketFlameRight = SpriteAnimationGroupComponent<_RocketFlameSprites>(
+    _flameRight = SpriteAnimationGroupComponent<_FlameSprites>(
       anchor: Anchor.topCenter,
-      current: _RocketFlameSprites.flameNormal,
-      position: Vector2(_rocketSprite.width * 0.9, _rocketSprite.height),
+      current: _FlameSprites.flameNormal,
+      position: Vector2(_spaceShipSprite.width * 0.9, _spaceShipSprite.height),
       animations: animation,
       scale: Vector2(0.3, 0.25),
     )..opacity = 0.8;
 
-    await _rocketSprite.add(_rocketFlameLeft);
-    await _rocketSprite.add(_rocketFlameRight);
+    await _spaceShipSprite.add(_flameLeft);
+    await _spaceShipSprite.add(_flameRight);
 
     await add(
       _hitbox = RectangleHitbox(
-        size: _rocketSprite.size,
+        size: _spaceShipSprite.size,
         anchor: Anchor.center,
       ),
     );
@@ -121,12 +119,12 @@ class RocketComponent extends PositionComponent
   }
 
   void _updatePosition(double dt) {
-    _rocketSprite.angle += _angularSpeed * dt;
-    _hitbox.angle = _rocketSprite.angle;
+    _spaceShipSprite.angle += _angularSpeed * dt;
+    _hitbox.angle = _spaceShipSprite.angle;
 
     _moveDirection.setValues(
-      -sin(_rocketSprite.angle),
-      cos(_rocketSprite.angle),
+      -sin(_spaceShipSprite.angle),
+      cos(_spaceShipSprite.angle),
     );
 
     position.setValues(
@@ -137,8 +135,8 @@ class RocketComponent extends PositionComponent
 
   void _scaleFlames() {
     final flameAdjustment = -ancestor.input.hAxis * 0.25;
-    _rocketFlameLeft.scale.y = _speedFactor - flameAdjustment;
-    _rocketFlameRight.scale.y = _speedFactor + flameAdjustment;
+    _flameLeft.scale.y = _speedFactor - flameAdjustment;
+    _flameRight.scale.y = _speedFactor + flameAdjustment;
   }
 
   void _handleSlowDown(double dt) {
@@ -163,8 +161,8 @@ class RocketComponent extends PositionComponent
 
   void _handleBoost(double dt) {
     if (ancestor.input.boost) {
-      _rocketFlameLeft.current = _RocketFlameSprites.flameBoost;
-      _rocketFlameRight.current = _RocketFlameSprites.flameBoost;
+      _flameLeft.current = _FlameSprites.flameBoost;
+      _flameRight.current = _FlameSprites.flameBoost;
       _speed =
           lerpDouble(
             _speed,
@@ -174,8 +172,8 @@ class RocketComponent extends PositionComponent
 
       _speedFactor = -_speed / _maxBoostSpeed;
     } else {
-      _rocketFlameLeft.current = _RocketFlameSprites.flameNormal;
-      _rocketFlameRight.current = _RocketFlameSprites.flameNormal;
+      _flameLeft.current = _FlameSprites.flameNormal;
+      _flameRight.current = _FlameSprites.flameNormal;
       _speed =
           lerpDouble(
             _speed,
@@ -213,7 +211,7 @@ class RocketComponent extends PositionComponent
 
     if (ancestor.input.fire && _timeSinceLastFire >= _fireDelay) {
       final bullet = BulletComponent(
-        position: position - _moveDirection * (_rocketSprite.height / 2),
+        position: position - _moveDirection * (_spaceShipSprite.height / 2),
         direction: -_moveDirection,
       );
       parent.add(bullet);
@@ -221,5 +219,3 @@ class RocketComponent extends PositionComponent
     }
   }
 }
-
-enum _RocketFlameSprites { flameNormal, flameBoost }

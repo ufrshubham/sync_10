@@ -71,7 +71,7 @@ class Level extends PositionComponent
                     _random.nextDouble() * spawnArea.size.y,
                   ),
                 );
-            _rocket = RocketComponent(
+            _rocket = SpaceshipComponent(
               position: randomPosition,
               anchor: Anchor.center,
               scale: Vector2.all(0.5),
