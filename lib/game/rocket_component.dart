@@ -51,6 +51,8 @@ class SpaceshipComponent extends PositionComponent
   int get nOrbsCollected => _nOrbsCollected;
   double get health => _health;
 
+  late final double _hitboxRadius;
+
   @override
   Future<void> onLoad() async {
     _spaceShipSprite = SpriteComponent(
@@ -59,15 +61,10 @@ class SpaceshipComponent extends PositionComponent
       scale: _scale,
     );
     await add(_spaceShipSprite);
-
     await _setupFlames();
 
-    await add(
-      CircleHitbox(
-        radius: _spaceShipSprite.size.x * 0.3 * _scale.x,
-        anchor: Anchor.center,
-      ),
-    );
+    _hitboxRadius = _spaceShipSprite.size.x * 0.5 * _scale.x;
+    await add(CircleHitbox(radius: _hitboxRadius, anchor: Anchor.center));
   }
 
   @override
@@ -119,6 +116,27 @@ class SpaceshipComponent extends PositionComponent
   }
 
   @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is PlanetComponent) {
+      if (intersectionPoints.length == 2) {
+        // Calculate the collision normal and separation distance.
+        final mid =
+            (intersectionPoints.elementAt(0) +
+                intersectionPoints.elementAt(1)) /
+            2;
+
+        final collisionNormal = absoluteCenter - mid;
+        final separationDistance = _hitboxRadius - collisionNormal.length;
+        collisionNormal.normalize();
+
+        position += collisionNormal.scaled(separationDistance);
+      }
+    }
+
+    super.onCollision(intersectionPoints, other);
+  }
+
+  @override
   void onCollisionStart(
     Set<Vector2> intersectionPoints,
     PositionComponent other,
@@ -126,8 +144,11 @@ class SpaceshipComponent extends PositionComponent
     super.onCollisionStart(intersectionPoints, other);
 
     if (other is PlanetComponent) {
-      _health = clampDouble(_health - other.damageValue, 0, 100);
-      ancestor.updateHealthBar(_health);
+      if (other.isShaking == false) {
+        _health = clampDouble(_health - other.damageValue, 0, 100);
+        ancestor.updateHealthBar(_health);
+      }
+      other.shake(_moveDirection);
     } else if (other is OrbComponent) {
       other.removeFromParent();
       _nOrbsCollected++;
@@ -136,13 +157,6 @@ class SpaceshipComponent extends PositionComponent
       _health = clampDouble(_health + other.healthValue, 0, 100);
       ancestor.updateHealthBar(_health);
     }
-  }
-
-  @override
-  void onCollisionEnd(PositionComponent other) {
-    super.onCollisionEnd(other);
-
-    if (other is PlanetComponent) {}
   }
 
   Future<void> _setupFlames() async {

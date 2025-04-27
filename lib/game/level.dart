@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flame/camera.dart';
 import 'package:flame/collisions.dart';
@@ -8,7 +7,6 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:flutter/material.dart';
 import 'package:sync_10/game/game.dart';
 import 'package:sync_10/game/health_pickup_component.dart';
 import 'package:sync_10/game/orb_component.dart';

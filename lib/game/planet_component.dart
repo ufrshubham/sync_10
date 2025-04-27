@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:sync_10/routes/game_play.dart';
 
 class PlanetComponent extends PositionComponent
@@ -26,9 +27,14 @@ class PlanetComponent extends PositionComponent
   double get damageValue => 10.0;
   final Vector2 _scale;
 
+  var _isShaking = false;
+  bool get isShaking => _isShaking;
+
+  late final SpriteComponent _planetSprite;
+
   @override
   Future<void> onLoad() async {
-    final planetSprite = SpriteComponent(
+    _planetSprite = SpriteComponent(
       sprite: await Sprite.load(
         PlanetComponent._planets[_random.nextInt(
           PlanetComponent._planets.length,
@@ -37,11 +43,11 @@ class PlanetComponent extends PositionComponent
       scale: _scale,
       anchor: Anchor.center,
     );
-    await add(planetSprite);
+    await add(_planetSprite);
 
     await add(
       CircleHitbox(
-        radius: planetSprite.size.x * 0.5 * _scale.x * 0.9,
+        radius: _planetSprite.size.x * 0.5 * _scale.x * 0.9,
         anchor: Anchor.center,
         collisionType: CollisionType.passive,
         isSolid: true,
@@ -58,6 +64,19 @@ class PlanetComponent extends PositionComponent
         Offset(position.x, position.y),
         20,
         Paint()..color = const Color.fromARGB(255, 197, 223, 197),
+      );
+    }
+  }
+
+  void shake(Vector2 moveDirection) {
+    if (_isShaking == false) {
+      _isShaking = true;
+      _planetSprite.add(
+        MoveEffect.by(
+          moveDirection.normalized() * 5,
+          EffectController(duration: 0.06, alternate: true, repeatCount: 3),
+          onComplete: () => _isShaking = false,
+        ),
       );
     }
   }
