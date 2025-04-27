@@ -4,8 +4,12 @@ import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flutter/material.dart';
+import 'package:sync_10/game/level.dart';
+import 'package:sync_10/routes/game_play.dart';
 
-class AsteroidComponent extends PositionComponent {
+class AsteroidComponent extends PositionComponent
+    with ParentIsA<Level>, HasAncestor<Gameplay> {
   AsteroidComponent({
     required this.moveDirection,
     super.position,
@@ -50,6 +54,42 @@ class AsteroidComponent extends PositionComponent {
   @override
   void update(double dt) {
     position.add(moveDirection * _speed * dt);
+    if (position.x < 0 || position.x > parent.size.x) {
+      removeFromParent();
+    } else if (position.y < 0 || position.y > parent.size.y) {
+      removeFromParent();
+    }
+  }
+
+  @override
+  void renderTree(Canvas canvas) {
+    if (CameraComponent.currentCamera == ancestor.camera) {
+      super.renderTree(canvas);
+    } else {
+      final paint =
+          Paint()
+            ..color = const Color.fromARGB(255, 75, 46, 0)
+            ..style = PaintingStyle.fill;
+
+      final path = Path();
+      final radius = _asteroid.size.x * 0.7 * _scale.x;
+      final centerX = position.x;
+      final centerY = position.y;
+
+      for (var i = 0; i < 6; i++) {
+        final angle = (2 * pi / 6) * i - pi / 2;
+        final x = centerX + radius * cos(angle);
+        final y = centerY + radius * sin(angle);
+        if (i == 0) {
+          path.moveTo(x, y);
+        } else {
+          path.lineTo(x, y);
+        }
+      }
+      path.close();
+
+      canvas.drawPath(path, paint);
+    }
   }
 
   void damage() {
