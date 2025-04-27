@@ -1,8 +1,12 @@
-# Sync:10
+# Sync:[10]
 
 A 2D game where two players control a single spaceship to beat the boss in as less time as possible.
 
 ## Credits
+
+### Image Assets
+
+- All asset are made by [RespawnedPlayer](https://respawnedplayer.itch.io/)
 
 ### Shaders
 
