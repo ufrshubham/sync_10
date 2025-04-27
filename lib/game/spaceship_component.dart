@@ -305,7 +305,6 @@ class SpaceshipComponent extends PositionComponent
       );
       ancestor.updateFuelBar(_fuel);
     }
-    print('_fuel: $_fuel');
   }
 
   void _handleFire(double dt) {
