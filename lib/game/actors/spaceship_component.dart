@@ -3,14 +3,15 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:sync_10/game/bullet_component.dart';
-import 'package:sync_10/game/energy_pickup_component.dart';
-import 'package:sync_10/game/fuel_pickup_component.dart';
-import 'package:sync_10/game/health_pickup_component.dart';
+import 'package:sync_10/game/actors/asteroid_component.dart';
+import 'package:sync_10/game/actors/bullet_component.dart';
+import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/game/hit_effect_component.dart';
 import 'package:sync_10/game/level.dart';
-import 'package:sync_10/game/planet_component.dart';
-import 'package:sync_10/game/syncron_component.dart';
+import 'package:sync_10/game/pickups/energy_pickup_component.dart';
+import 'package:sync_10/game/pickups/fuel_pickup_component.dart';
+import 'package:sync_10/game/pickups/health_pickup_component.dart';
+import 'package:sync_10/game/pickups/syncron_pickup_component.dart';
 import 'package:sync_10/routes/game_play.dart';
 
 enum _FlameSprites { flameNormal, flameBoost }
@@ -145,7 +146,7 @@ class SpaceshipComponent extends PositionComponent
       return;
     }
 
-    if (other is PlanetComponent) {
+    if (other is PlanetComponent || other is AsteroidComponent) {
       if (intersectionPoints.length == 2) {
         final mid =
             (intersectionPoints.elementAt(0) +
@@ -196,7 +197,27 @@ class SpaceshipComponent extends PositionComponent
         }
       }
       other.shake(_moveDirection);
-    } else if (other is SyncronComponent) {
+    } else if (other is AsteroidComponent) {
+      if (other.isShaking == false) {
+        other.damage();
+        _health = clampDouble(_health - other.damageValue, 0, 100);
+        ancestor.updateHealthBar(_health);
+        if (intersectionPoints.length == 2) {
+          final mid =
+              (intersectionPoints.elementAt(0) +
+                  intersectionPoints.elementAt(1)) /
+              2;
+          parent.add(
+            HitEffectComponent(
+              position: mid,
+              scale: Vector2.all(0.5),
+              angle: _moveDirection.screenAngle(),
+            ),
+          );
+        }
+      }
+      other.shake(_moveDirection);
+    } else if (other is SyncronPickupComponent) {
       other.removeFromParent();
       _syncronCollected++;
       ancestor.updateSyncronCount(_syncronCollected);

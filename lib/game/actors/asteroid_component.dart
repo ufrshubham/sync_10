@@ -1,0 +1,77 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:flame/collisions.dart';
+import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
+
+class AsteroidComponent extends PositionComponent {
+  AsteroidComponent({
+    required this.moveDirection,
+    super.position,
+    super.anchor,
+    Vector2? scale,
+  }) : _scale = scale ?? Vector2.all(1.0);
+
+  final Vector2 _scale;
+  final Vector2 moveDirection;
+  late final SpriteGroupComponent<_AsteroidDamage> _asteroid;
+  static const _speed = 50.0;
+
+  double get damageValue => 10;
+  var _isShaking = false;
+  bool get isShaking => _isShaking;
+
+  @override
+  Future<void> onLoad() async {
+    _asteroid = SpriteGroupComponent<_AsteroidDamage>(
+      current: _AsteroidDamage.normal,
+      scale: _scale,
+      anchor: Anchor.center,
+      sprites: {
+        _AsteroidDamage.normal: await Sprite.load('AsteroidNormal.png'),
+        _AsteroidDamage.damaged: await Sprite.load('AsteroidDamaged.png'),
+      },
+      children: [
+        RotateEffect.by(2 * pi, EffectController(duration: 10, infinite: true)),
+      ],
+    );
+    await add(_asteroid);
+
+    await add(
+      CircleHitbox(
+        radius: _asteroid.size.x * 0.5 * _scale.x,
+        anchor: Anchor.center,
+        collisionType: CollisionType.passive,
+      ),
+    );
+  }
+
+  @override
+  void update(double dt) {
+    position.add(moveDirection * _speed * dt);
+  }
+
+  void damage() {
+    if (_asteroid.current == _AsteroidDamage.normal) {
+      _asteroid.current = _AsteroidDamage.damaged;
+    } else {
+      removeFromParent();
+    }
+  }
+
+  void shake(Vector2 moveDirection) {
+    if (_isShaking == false) {
+      _isShaking = true;
+      _asteroid.add(
+        MoveEffect.by(
+          moveDirection.normalized() * 5,
+          EffectController(duration: 0.06, alternate: true, repeatCount: 3),
+          onComplete: () => _isShaking = false,
+        ),
+      );
+    }
+  }
+}
+
+enum _AsteroidDamage { normal, damaged }

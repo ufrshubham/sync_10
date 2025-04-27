@@ -6,14 +6,15 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:sync_10/game/energy_pickup_component.dart';
-import 'package:sync_10/game/fuel_pickup_component.dart';
+import 'package:sync_10/game/actors/asteroid_component.dart';
+import 'package:sync_10/game/actors/planet_component.dart';
+import 'package:sync_10/game/actors/spaceship_component.dart';
 import 'package:sync_10/game/game.dart';
-import 'package:sync_10/game/health_pickup_component.dart';
-import 'package:sync_10/game/planet_component.dart';
-import 'package:sync_10/game/spaceship_component.dart';
-import 'package:sync_10/game/star_nest_component.dart';
-import 'package:sync_10/game/syncron_component.dart';
+import 'package:sync_10/game/pickups/energy_pickup_component.dart';
+import 'package:sync_10/game/pickups/fuel_pickup_component.dart';
+import 'package:sync_10/game/pickups/health_pickup_component.dart';
+import 'package:sync_10/game/pickups/syncron_pickup_component.dart';
+import 'package:sync_10/game/shader_components/star_nest_component.dart';
 import 'package:sync_10/routes/game_play.dart';
 
 class Level extends PositionComponent
@@ -93,7 +94,7 @@ class Level extends PositionComponent
             );
             await add(_rocket);
             break;
-          case 'Orb':
+          case 'Syncron':
             final randomPosition =
                 spawnArea.position..add(
                   Vector2(
@@ -102,7 +103,7 @@ class Level extends PositionComponent
                   ),
                 );
             await add(
-              SyncronComponent(
+              SyncronPickupComponent(
                 position: randomPosition,
                 anchor: Anchor.center,
                 scale: Vector2.all(0.3),
@@ -200,6 +201,31 @@ class Level extends PositionComponent
             );
 
             await add(energySpawner);
+            break;
+
+          case 'Asteroid':
+            final asteroidSpawner = SpawnComponent.periodRange(
+              minPeriod: 15,
+              maxPeriod: 30,
+              selfPositioning: true,
+              factory: (amount) {
+                final randomPosition =
+                    spawnArea.position..add(
+                      Vector2(
+                        _random.nextDouble() * spawnArea.size.x,
+                        _random.nextDouble() * spawnArea.size.y,
+                      ),
+                    );
+                return AsteroidComponent(
+                  position: randomPosition,
+                  moveDirection: (size * 0.5 - randomPosition).normalized(),
+                  anchor: Anchor.center,
+                  scale: Vector2.all(0.4),
+                );
+              },
+            );
+
+            await add(asteroidSpawner);
             break;
         }
       }

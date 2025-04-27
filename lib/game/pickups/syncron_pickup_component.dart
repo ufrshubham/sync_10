@@ -4,12 +4,12 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:sync_10/game/planet_component.dart';
+import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/routes/game_play.dart';
 
-class SyncronComponent extends PositionComponent
+class SyncronPickupComponent extends PositionComponent
     with CollisionCallbacks, HasAncestor<Gameplay> {
-  SyncronComponent({
+  SyncronPickupComponent({
     super.position,
     super.size,
     Vector2? scale,
