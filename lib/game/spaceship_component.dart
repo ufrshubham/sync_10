@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:sync_10/game/bullet_component.dart';
+import 'package:sync_10/game/fuel_pickup_component.dart';
 import 'package:sync_10/game/health_pickup_component.dart';
 import 'package:sync_10/game/hit_effect_component.dart';
 import 'package:sync_10/game/level.dart';
@@ -35,6 +36,7 @@ class SpaceshipComponent extends PositionComponent
   var _nOrbsCollected = 0;
   var _timeSinceLastFire = 0.0;
   var _health = 100.0;
+  var _fuel = 100.0;
 
   final _moveDirection = Vector2(0, 0);
   final Vector2 _scale;
@@ -48,6 +50,8 @@ class SpaceshipComponent extends PositionComponent
   static const _maxSlowDownAngularSpeed = 4.0;
   static const _maxSlowDownAngularAcceleration = 2.0;
   static const _fireDelay = 0.5;
+  static const _fuelConsumption = 1.0;
+  static const _fuelConsumptionBoost = 2.0;
 
   int get nOrbsCollected => _nOrbsCollected;
   double get health => _health;
@@ -169,6 +173,10 @@ class SpaceshipComponent extends PositionComponent
       other.removeFromParent();
       _health = clampDouble(_health + other.healthValue, 0, 100);
       ancestor.updateHealthBar(_health);
+    } else if (other is FuelPickupComponent) {
+      other.removeFromParent();
+      _fuel = clampDouble(_fuel + other.fuelValue, 0, 100);
+      ancestor.updateFuelBar(_fuel, increase: true);
     }
   }
 
@@ -266,6 +274,12 @@ class SpaceshipComponent extends PositionComponent
           )!;
 
       _speedFactor = -_speed / _maxBoostSpeed;
+      _fuel = clampDouble(
+        _fuel - _fuelConsumptionBoost * ancestor.input.vAxis.abs() * dt,
+        0,
+        100,
+      );
+      ancestor.updateFuelBar(_fuel);
     } else {
       _flameLeft.current = _FlameSprites.flameNormal;
       _flameRight.current = _FlameSprites.flameNormal;
@@ -277,7 +291,14 @@ class SpaceshipComponent extends PositionComponent
           )!;
 
       _speedFactor = -_speed / _maxSpeed;
+      _fuel = clampDouble(
+        _fuel - _fuelConsumption * ancestor.input.vAxis.abs() * dt,
+        0,
+        100,
+      );
+      ancestor.updateFuelBar(_fuel);
     }
+    print('_fuel: $_fuel');
   }
 
   void _handleFire(double dt) {

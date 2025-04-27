@@ -130,7 +130,7 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
     _hud.updateEnergyBar(energy);
   }
 
-  void updateFuelBar(double fuel) {
-    _hud.updateFuelBar(fuel);
+  void updateFuelBar(double fuel, {bool increase = false}) {
+    _hud.updateFuelBar(fuel, increase: increase);
   }
 }

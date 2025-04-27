@@ -8,11 +8,11 @@
     ],
     "fileStates": {
         "level.tmx": {
-            "scale": 0.25,
+            "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 2216,
-                "y": 1912
+                "x": 2248,
+                "y": 2852
             }
         }
     },

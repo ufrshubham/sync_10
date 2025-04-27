@@ -175,10 +175,10 @@ class HudComponent extends PositionComponent
     }
   }
 
-  void updateFuelBar(double fuel) {
+  void updateFuelBar(double fuel, {bool increase = false}) {
     _fuelBar.size.y = _fuelBarBackground.size.y * (fuel / 100);
 
-    if (_isFuelBarEffectRunning == false) {
+    if (increase && _isFuelBarEffectRunning == false) {
       _isFuelBarEffectRunning = true;
 
       _fuelBarIcon.add(

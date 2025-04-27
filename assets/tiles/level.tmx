@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="29">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="49">
  <layer id="1" name="Background" width="200" height="200">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -224,5 +224,23 @@
   <object id="25" name="HealthPickup" type="HealthPickup" x="2432" y="1792" width="464" height="368"/>
   <object id="26" name="HealthPickup" type="HealthPickup" x="2240" y="2400" width="464" height="368"/>
   <object id="27" name="HealthPickup" type="HealthPickup" x="2240" y="2400" width="464" height="368"/>
+  <object id="29" name="FuelPickup" type="FuelPickup" x="256" y="736" width="256" height="240"/>
+  <object id="31" name="FuelPickup" type="FuelPickup" x="2624" y="304" width="256" height="240"/>
+  <object id="32" name="FuelPickup" type="FuelPickup" x="1968" y="784" width="256" height="240"/>
+  <object id="33" name="FuelPickup" type="FuelPickup" x="368" y="1344" width="256" height="240"/>
+  <object id="34" name="FuelPickup" type="FuelPickup" x="272" y="2320" width="256" height="240"/>
+  <object id="35" name="FuelPickup" type="FuelPickup" x="1792" y="2256" width="256" height="240"/>
+  <object id="36" name="FuelPickup" type="FuelPickup" x="2432" y="1296" width="256" height="240"/>
+  <object id="37" name="FuelPickup" type="FuelPickup" x="1056" y="576" width="256" height="240"/>
+  <object id="38" name="FuelPickup" type="FuelPickup" x="976" y="1792" width="256" height="240"/>
+  <object id="39" name="FuelPickup" type="FuelPickup" x="1120" y="1088" width="256" height="240"/>
+  <object id="40" name="FuelPickup" type="FuelPickup" x="2064" y="1344" width="256" height="240"/>
+  <object id="41" name="FuelPickup" type="FuelPickup" x="1808" y="1776" width="256" height="240"/>
+  <object id="42" name="FuelPickup" type="FuelPickup" x="1584" y="1008" width="256" height="240"/>
+  <object id="43" name="FuelPickup" type="FuelPickup" x="272" y="2736" width="256" height="240"/>
+  <object id="44" name="FuelPickup" type="FuelPickup" x="2672" y="2560" width="256" height="240"/>
+  <object id="47" name="FuelPickup" type="FuelPickup" x="304" y="1728" width="256" height="240"/>
+  <object id="48" name="FuelPickup" type="FuelPickup" x="2672" y="2000" width="256" height="240"/>
+  <object id="45" name="FuelPickup" type="FuelPickup" x="1024" y="2320" width="256" height="240"/>
  </objectgroup>
 </map>

@@ -7,6 +7,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:sync_10/game/fuel_pickup_component.dart';
 import 'package:sync_10/game/game.dart';
 import 'package:sync_10/game/health_pickup_component.dart';
 import 'package:sync_10/game/orb_component.dart';
@@ -145,6 +146,26 @@ class Level extends PositionComponent
             );
 
             await add(healthSpawner);
+            break;
+
+          case 'FuelPickup':
+            final fuelSpawner = SpawnComponent(
+              period: 15,
+              factory: (amount) {
+                return FuelPickupComponent(
+                  anchor: Anchor.center,
+                  scale: Vector2.all(0.4),
+                );
+              },
+              area: Rectangle.fromLTWH(
+                spawnArea.position.x,
+                spawnArea.position.y,
+                spawnArea.size.x,
+                spawnArea.size.y,
+              ),
+            );
+
+            await add(fuelSpawner);
             break;
         }
       }
