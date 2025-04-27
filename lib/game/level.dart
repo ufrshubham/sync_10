@@ -60,6 +60,8 @@ class Level extends PositionComponent
     final starNest = StarNextComponent(size: map.size);
     await add(starNest);
 
+    await game.images.load('Radar.png');
+
     final spawnAreas = map.tileMap.getLayer<ObjectGroup>('SpawnAreas');
     if (spawnAreas != null) {
       for (final spawnArea in spawnAreas.objects) {
@@ -175,13 +177,12 @@ class Level extends PositionComponent
           20,
     );
 
-    // TODO(devkage): Add a background to the miniMap.
-    // ancestor.miniMap.backdrop.add(
-    //   SpriteComponent(
-    //     sprite: Sprite(game.images.fromCache('Planet-1.png')),
-    //     size: ancestor.miniMap.viewport.virtualSize,
-    //   )..opacity = 0.5,
-    // );
+    ancestor.miniMap.backdrop.add(
+      SpriteComponent(
+        sprite: Sprite(game.images.fromCache('Radar.png')),
+        size: ancestor.miniMap.viewport.virtualSize,
+      )..opacity = 0.2,
+    );
   }
 
   void onFinish(Set<Vector2> intersectionPoints, ShapeHitbox other) {

@@ -46,7 +46,14 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
       world: world,
       backdrop: RectangleComponent(
         size: Gameplay.visibleGameSize,
-        paint: Paint()..color = Colors.black.withValues(alpha: 0.8),
+        paint:
+            Paint()
+              ..color = const Color.fromARGB(
+                124,
+                12,
+                27,
+                16,
+              ).withValues(alpha: 0.5),
       ),
     )..priority = 10,
     CameraType.debug: CameraComponent.withFixedResolution(
