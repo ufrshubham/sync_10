@@ -125,4 +125,12 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
   void updateHealthBar(double health) {
     _hud.updateHealthBar(health);
   }
+
+  void updateEnergyBar(double energy) {
+    _hud.updateEnergyBar(energy);
+  }
+
+  void updateFuelBar(double fuel) {
+    _hud.updateFuelBar(fuel);
+  }
 }
