@@ -59,10 +59,9 @@ class InputComponent extends Component with KeyboardHandler {
     _left = isListening && keysPressed.contains(LogicalKeyboardKey.keyA);
     _right = isListening && keysPressed.contains(LogicalKeyboardKey.keyD);
 
-    _boost = isListening && keysPressed.contains(LogicalKeyboardKey.keyB);
-    _slowDown =
-        isListening && keysPressed.contains(LogicalKeyboardKey.shiftRight);
-    _fire = isListening && keysPressed.contains(LogicalKeyboardKey.keyF);
+    _boost = isListening && keysPressed.contains(LogicalKeyboardKey.keyI);
+    _slowDown = isListening && keysPressed.contains(LogicalKeyboardKey.keyO);
+    _fire = isListening && keysPressed.contains(LogicalKeyboardKey.space);
 
     if (isListening && event is KeyDownEvent) {
       for (final entry in _keyCallbacks.entries) {

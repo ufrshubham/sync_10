@@ -54,5 +54,6 @@ web/
 
 # Secrets
 secrets.txt
-run.bat
-build.bat
+run-windows.bat
+build-windows.bat
+build-web.bat

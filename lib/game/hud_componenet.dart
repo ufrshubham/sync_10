@@ -7,6 +7,8 @@ import 'package:flutter/material.dart' hide Viewport;
 
 class HudComponent extends PositionComponent
     with ParentIsA<Viewport>, HasGameReference {
+  late final TextComponent _timeElapsedText;
+
   late final RectangleComponent _healthBar;
   late final RectangleComponent _healthBarBackground;
   late final SpriteComponent _healthBarIcon;
@@ -22,15 +24,70 @@ class HudComponent extends PositionComponent
   late final SpriteComponent _fuelBarIcon;
   bool _isFuelBarEffectRunning = false;
 
+  late final SpriteComponent _syncronSprite;
+  late final TextComponent _syncronCountText;
+  bool _isSyncronEffectRunning = false;
+  var _syncronToCollect = 0;
+
   @override
   Future<void> onLoad() async {
+    await _setupTimeComponent();
     await _setupHealthBar();
     await _setupEnergyBar();
     await _setupFuelBar();
+
+    final sprites = [
+      await Sprite.load('SyncronLight-1.png'),
+      await Sprite.load('SyncronLight-2.png'),
+    ];
+
+    _syncronSprite = SpriteComponent(
+      sprite: await Sprite.load('Syncron.png'),
+      anchor: Anchor.center,
+      scale: Vector2.all(0.25),
+      position: Vector2(parent.virtualSize.x * 0.5, parent.virtualSize.y - 30),
+    );
+
+    await _syncronSprite.add(
+      SpriteAnimationComponent(
+        anchor: Anchor.center,
+        animation: SpriteAnimation.spriteList(sprites, stepTime: 0.2),
+        position: _syncronSprite.size * 0.5,
+      ),
+    );
+    await add(_syncronSprite);
+
+    _syncronCountText = TextComponent(
+      text: '0/0',
+      position: Vector2(
+        _syncronSprite.position.x +
+            _syncronSprite.size.x * _syncronSprite.scale.x +
+            5,
+        _syncronSprite.position.y,
+      ),
+      anchor: Anchor.center,
+      textRenderer: TextPaint(
+        style: const TextStyle(color: Colors.white, fontSize: 18),
+      ),
+    );
+    await add(_syncronCountText);
   }
 
-  @override
-  void update(double dt) {}
+  Future<void> _setupTimeComponent() async {
+    _timeElapsedText = TextComponent(
+      text: 'Time: 0',
+      position: Vector2(parent.virtualSize.x * 0.5, 30),
+      anchor: Anchor.topCenter,
+      textRenderer: TextPaint(
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          backgroundColor: Colors.black.withValues(alpha: 0.1),
+        ),
+      ),
+    );
+    await add(_timeElapsedText);
+  }
 
   Future<void> _setupHealthBar() async {
     _healthBarBackground = RectangleComponent(
@@ -189,5 +246,33 @@ class HudComponent extends PositionComponent
         ),
       );
     }
+  }
+
+  void updateTimeElapsed(double elapsedTime) {
+    final hours = (elapsedTime ~/ 3600).toString();
+    final minutes = ((elapsedTime % 3600) ~/ 60).toString();
+    final seconds = (elapsedTime % 60).toStringAsFixed(0);
+
+    _timeElapsedText.text =
+        '''Time: ${[if (hours != '0') hours.padLeft(2, '0'), if (hours != '0' || minutes != '0') minutes.padLeft(2, '0'), seconds.padLeft(2, '0')].join(':')}''';
+  }
+
+  void updateSyncronCount(int syncronCollected) {
+    _syncronCountText.text = '$syncronCollected/$_syncronToCollect';
+    if (_isSyncronEffectRunning == false) {
+      _isSyncronEffectRunning = true;
+      _syncronSprite.add(
+        ScaleEffect.by(
+          Vector2(2, 1.5),
+          EffectController(duration: 0.1, alternate: true, repeatCount: 2),
+          onComplete: () => _isSyncronEffectRunning = false,
+        ),
+      );
+    }
+  }
+
+  void updateSyncronToCollect(int syncronToCollect) {
+    _syncronToCollect = syncronToCollect;
+    _syncronCountText.text = '0/$syncronToCollect';
   }
 }

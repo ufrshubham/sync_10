@@ -23,6 +23,8 @@ class SyncronComponent extends PositionComponent
 
   final Vector2 _scale;
 
+  double get syncronValue => 40.0;
+
   @override
   Future<void> onLoad() async {
     final sprites = [
@@ -52,7 +54,6 @@ class SyncronComponent extends PositionComponent
       CircleHitbox(
         radius: syncronSprite.size.x * 0.5 * _scale.x * 0.9,
         anchor: Anchor.center,
-        collisionType: CollisionType.passive,
         isSolid: true,
       ),
     );

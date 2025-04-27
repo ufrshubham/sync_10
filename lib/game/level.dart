@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flame/camera.dart';
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
@@ -39,6 +38,12 @@ class Level extends PositionComponent
   late final PositionComponent _rocket;
 
   static final _random = Random();
+  double _elapsedTime = 0;
+
+  var _syncronsToCollect = 0;
+  int get syncronsToCollect => _syncronsToCollect;
+
+  int get levelTime => _elapsedTime.toInt();
 
   @override
   Future<void> onLoad() async {
@@ -103,6 +108,7 @@ class Level extends PositionComponent
                 scale: Vector2.all(0.3),
               ),
             );
+            _syncronsToCollect++;
             break;
 
           case 'Planet':
@@ -229,15 +235,14 @@ class Level extends PositionComponent
         size: ancestor.miniMap.viewport.virtualSize,
       )..opacity = 0.2,
     );
+
+    ancestor.updateSyncronToCollect(_syncronsToCollect);
   }
 
-  void onFinish(Set<Vector2> intersectionPoints, ShapeHitbox other) {
-    timeScale = 0.25;
-    ancestor.input.isListening = false;
-
-    ancestor.fadeOut().then((_) {
-      timeScale = 1;
-      ancestor.levelComplete();
-    });
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _elapsedTime += dt;
+    ancestor.updateTimeElapsed(_elapsedTime);
   }
 }

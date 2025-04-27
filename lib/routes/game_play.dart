@@ -31,6 +31,8 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
   final ValueChanged<int> onLevelCompleted;
   final VoidCallback onGameOver;
 
+  late final Level _level;
+
   late final cameras = <CameraType, CameraComponent>{
     CameraType.primary: CameraComponent.withFixedResolution(
       width: visibleGameSize.x,
@@ -75,14 +77,14 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
             keyCallbacks: {
               LogicalKeyboardKey.keyP: onPausePressed,
               LogicalKeyboardKey.keyC: () => onLevelCompleted.call(3),
-              LogicalKeyboardKey.keyO: onGameOver,
+              LogicalKeyboardKey.keyG: onGameOver,
             },
           )
           : GamepadComponenet(
             keyCallbacks: {
               LogicalKeyboardKey.keyP: onPausePressed,
               LogicalKeyboardKey.keyC: () => onLevelCompleted.call(3),
-              LogicalKeyboardKey.keyO: onGameOver,
+              LogicalKeyboardKey.keyG: onGameOver,
             },
           );
 
@@ -97,8 +99,8 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
 
     await addAll([world, camera]);
 
-    final level = Level('level.tmx', Vector2.all(16));
-    await world.addAll([level, input]);
+    _level = Level('level.tmx', Vector2.all(16));
+    await world.addAll([_level, input]);
 
     _hud = HudComponent();
 
@@ -142,5 +144,23 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
 
   void updateFuelBar(double fuel, {bool increase = false}) {
     _hud.updateFuelBar(fuel, increase: increase);
+  }
+
+  void updateTimeElapsed(double timeElapsed) {
+    _hud.updateTimeElapsed(timeElapsed);
+  }
+
+  void updateSyncronCount(int syncronCollected) {
+    _hud.updateSyncronCount(syncronCollected);
+
+    if (_level.syncronsToCollect == syncronCollected) {
+      onLevelCompleted.call(_level.levelTime);
+      _level.timeScale = 0;
+      input.isListening = false;
+    }
+  }
+
+  void updateSyncronToCollect(int syncronToCollect) {
+    _hud.updateSyncronToCollect(syncronToCollect);
   }
 }

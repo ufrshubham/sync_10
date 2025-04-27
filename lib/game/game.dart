@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -53,19 +52,24 @@ class Sync10Game extends FlameGame
         onExitPressed: _exitToMainMenu,
       ),
     ),
-    LevelComplete.id: OverlayRoute(
-      (context, game) => LevelComplete(
-        onSubmitPressed: _onSubmitPressed,
-        onRetryPressed: _restartLevel,
-        onExitPressed: _exitToMainMenu,
-      ),
-    ),
+  };
+
+  late final _routeFactories = <String, Route Function(String)>{
+    LevelComplete.id:
+        (argument) => OverlayRoute(
+          (context, game) => LevelComplete(
+            levelTime: int.parse(argument),
+            onSubmitPressed: _onSubmitPressed,
+            onRetryPressed: _restartLevel,
+            onExitPressed: _exitToMainMenu,
+          ),
+        ),
   };
 
   late final _router = RouterComponent(
     initialRoute: MainMenu.id,
     routes: _routes,
-    // routeFactories: _routeFactories,
+    routeFactories: _routeFactories,
   );
 
   @override
@@ -131,14 +135,6 @@ class Sync10Game extends FlameGame
     }
   }
 
-  // void _startNextLevel() {
-  //   final gameplay = findByKeyName<Gameplay>(Gameplay.id);
-
-  //   if (gameplay != null) {
-  //     _startLevel(gameplay.currentLevel + 1);
-  //   }
-  // }
-
   void _pauseGame() {
     _router.pushNamed(PauseMenu.id);
     pauseEngine();
@@ -154,20 +150,21 @@ class Sync10Game extends FlameGame
     _router.pushReplacementNamed(MainMenu.id);
   }
 
-  void _showLevelCompleteMenu(int nStars) {
-    _router.pushNamed(LevelComplete.id);
+  void _showLevelCompleteMenu(int levelTime) {
+    pauseEngine();
+    _router.pushNamed('${LevelComplete.id}/$levelTime');
   }
 
   void _showRetryMenu() {
     _router.pushNamed(RetryMenu.id);
   }
 
-  Future<void> _onSubmitPressed(String value) async {
+  Future<void> _onSubmitPressed(String duoName, int time) async {
     final authResponse = await client.auth.signInAnonymously();
     if (authResponse.session != null) {
       await client.from('Leaderboard').insert({
-        'DuoName': value,
-        'Time': Random().nextInt(1000),
+        'DuoName': duoName,
+        'Time': time,
       });
     }
   }

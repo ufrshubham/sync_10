@@ -34,7 +34,7 @@ class SpaceshipComponent extends PositionComponent
   var _speed = 0.0;
   var _speedFactor = 0.0;
   var _angularSpeed = 0.0;
-  var _nOrbsCollected = 0;
+  var _syncronCollected = 0;
   var _timeSinceLastFire = 0.0;
   var _health = 100.0;
   var _fuel = 100.0;
@@ -55,9 +55,9 @@ class SpaceshipComponent extends PositionComponent
   static const _fireDelay = 0.5;
   static const _fuelConsumption = 1.0;
   static const _fuelConsumptionBoost = 2.0;
-  static const _energyConsumption = 1.0;
+  static const _energyConsumptionFire = 1.0;
+  static const _energyConsumptionSlowDown = 15;
 
-  int get nOrbsCollected => _nOrbsCollected;
   double get health => _health;
 
   late final double _hitboxRadius;
@@ -177,7 +177,17 @@ class SpaceshipComponent extends PositionComponent
       other.shake(_moveDirection);
     } else if (other is SyncronComponent) {
       other.removeFromParent();
-      _nOrbsCollected++;
+      _syncronCollected++;
+      ancestor.updateSyncronCount(_syncronCollected);
+
+      _health = clampDouble(_health + other.syncronValue, 0, 100);
+      ancestor.updateHealthBar(_health, increase: true);
+
+      _fuel = clampDouble(_fuel + other.syncronValue, 0, 100);
+      ancestor.updateFuelBar(_fuel, increase: true);
+
+      _energy = clampDouble(_energy + other.syncronValue, 0, 100);
+      ancestor.updateEnergyBar(_energy, increase: true);
     } else if (other is HealthPickupComponent) {
       other.removeFromParent();
       _health = clampDouble(_health + other.healthValue, 0, 100);
@@ -265,6 +275,9 @@ class SpaceshipComponent extends PositionComponent
                 _maxSlowDownAngularSpeed,
             _maxSlowDownAngularAcceleration * dt,
           )!;
+
+      _energy = clampDouble(_energy - _energyConsumptionSlowDown * dt, 0, 100);
+      ancestor.updateEnergyBar(_energy);
     } else {
       parent.timeScale = 1.0;
       _angularSpeed =
@@ -324,7 +337,7 @@ class SpaceshipComponent extends PositionComponent
       );
       parent.add(bullet);
       _timeSinceLastFire = 0;
-      _energy = clampDouble(_energy - _energyConsumption, 0, 100);
+      _energy = clampDouble(_energy - _energyConsumptionFire, 0, 100);
       ancestor.updateEnergyBar(_energy);
     }
   }
