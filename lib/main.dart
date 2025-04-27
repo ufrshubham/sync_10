@@ -2,15 +2,16 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sync_10/game/game.dart';
-import 'package:sync_10/secrets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Supabase.initialize(
-    url: Secrets.url,
-    anonKey: Secrets.anonKey, // Replace with your Supabase anon key
-  );
+  // ignore: do_not_use_environment
+  const url = String.fromEnvironment('SUPABASE_URL');
+  // ignore: do_not_use_environment
+  const anonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+
+  await Supabase.initialize(url: url, anonKey: anonKey);
   runApp(const MainApp());
 }
 
