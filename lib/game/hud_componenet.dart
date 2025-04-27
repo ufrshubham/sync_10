@@ -25,6 +25,7 @@ class HudComponent extends PositionComponent
 
   late final RectangleComponent _healthBar;
   late final RectangleComponent _healthBarBackground;
+  bool _isHealthBarEffectRunning = false;
 
   @override
   Future<void> onLoad() async {
@@ -61,17 +62,23 @@ class HudComponent extends PositionComponent
 
   void updateHealthBar(double health) {
     _healthBar.size.y = _healthBarBackground.size.y * (health / 100);
-    _healthBarBackground.add(
-      ScaleEffect.by(
-        Vector2(1.5, 1),
-        EffectController(duration: 0.1, alternate: true, repeatCount: 3),
-      ),
-    );
-    _healthBar.add(
-      ScaleEffect.by(
-        Vector2(1.5, 1),
-        EffectController(duration: 0.1, alternate: true, repeatCount: 3),
-      ),
-    );
+
+    if (_isHealthBarEffectRunning == false) {
+      _isHealthBarEffectRunning = true;
+
+      _healthBarBackground.add(
+        ScaleEffect.by(
+          Vector2(1.5, 1),
+          EffectController(duration: 0.1, alternate: true, repeatCount: 3),
+        ),
+      );
+      _healthBar.add(
+        ScaleEffect.by(
+          Vector2(1.5, 1),
+          EffectController(duration: 0.1, alternate: true, repeatCount: 3),
+          onComplete: () => _isHealthBarEffectRunning = false,
+        ),
+      );
+    }
   }
 }
