@@ -35,6 +35,17 @@ class HudComponent extends PositionComponent
     await _setupHealthBar();
     await _setupEnergyBar();
     await _setupFuelBar();
+    await _setupSyncronCounter();
+  }
+
+  Future<void> _setupSyncronCounter() async {
+    final syncronCounterBackground = RectangleComponent(
+      size: Vector2(80, 40),
+      position: Vector2(parent.virtualSize.x - 100, 20),
+      anchor: Anchor.topLeft,
+      paint: Paint()..color = Colors.black.withValues(alpha: 0.3),
+    );
+    await add(syncronCounterBackground);
 
     final sprites = [
       await Sprite.load('SyncronLight-1.png'),
@@ -45,7 +56,7 @@ class HudComponent extends PositionComponent
       sprite: await Sprite.load('Syncron.png'),
       anchor: Anchor.center,
       scale: Vector2.all(0.25),
-      position: Vector2(parent.virtualSize.x * 0.5, parent.virtualSize.y - 30),
+      position: Vector2(parent.virtualSize.x - 80, 40),
     );
 
     await _syncronSprite.add(
@@ -76,13 +87,12 @@ class HudComponent extends PositionComponent
   Future<void> _setupTimeComponent() async {
     _timeElapsedText = TextComponent(
       text: 'Time: 0',
-      position: Vector2(parent.virtualSize.x * 0.5, 30),
-      anchor: Anchor.topCenter,
+      position: Vector2(30, 30),
       textRenderer: TextPaint(
         style: TextStyle(
           color: Colors.white,
           fontSize: 18,
-          backgroundColor: Colors.black.withValues(alpha: 0.1),
+          backgroundColor: Colors.black.withValues(alpha: 0.3),
         ),
       ),
     );
@@ -92,7 +102,7 @@ class HudComponent extends PositionComponent
   Future<void> _setupHealthBar() async {
     _healthBarBackground = RectangleComponent(
       anchor: Anchor.bottomCenter,
-      size: Vector2(14, parent.virtualSize.y * 0.25),
+      size: Vector2(8, parent.virtualSize.y * 0.25),
       position: Vector2(parent.virtualSize.x - 30, parent.virtualSize.y - 30),
       paint:
           Paint()
@@ -130,7 +140,7 @@ class HudComponent extends PositionComponent
   Future<void> _setupEnergyBar() async {
     _energyBarBackground = RectangleComponent(
       anchor: Anchor.bottomCenter,
-      size: Vector2(14, parent.virtualSize.y * 0.25),
+      size: Vector2(8, parent.virtualSize.y * 0.25),
       position: Vector2(parent.virtualSize.x - 80, parent.virtualSize.y - 30),
       paint:
           Paint()
@@ -168,7 +178,7 @@ class HudComponent extends PositionComponent
   Future<void> _setupFuelBar() async {
     _fuelBarBackground = RectangleComponent(
       anchor: Anchor.bottomCenter,
-      size: Vector2(14, parent.virtualSize.y * 0.25),
+      size: Vector2(8, parent.virtualSize.y * 0.25),
       position: Vector2(parent.virtualSize.x - 130, parent.virtualSize.y - 30),
       paint:
           Paint()

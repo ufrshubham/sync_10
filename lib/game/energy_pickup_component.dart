@@ -60,7 +60,7 @@ class EnergyPickupComponent extends PositionComponent
     } else {
       canvas.drawCircle(
         Offset(position.x, position.y),
-        30,
+        20,
         Paint()..color = const Color.fromARGB(255, 253, 155, 40),
       );
     }

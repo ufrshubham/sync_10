@@ -40,6 +40,7 @@ class SpaceshipComponent extends PositionComponent
   var _fuel = 100.0;
   var _energy = 100.0;
   var _isGameOver = false;
+  var _isInitialShieldActive = true;
 
   final _moveDirection = Vector2(0, 0);
   final Vector2 _scale;
@@ -57,6 +58,7 @@ class SpaceshipComponent extends PositionComponent
   static const _fuelConsumptionBoost = 2.0;
   static const _energyConsumptionFire = 1.0;
   static const _energyConsumptionSlowDown = 15;
+  static const _initialShieldTime = 1.0;
 
   double get health => _health;
 
@@ -74,6 +76,14 @@ class SpaceshipComponent extends PositionComponent
 
     _hitboxRadius = _spaceShipSprite.size.x * 0.5 * _scale.x;
     await add(CircleHitbox(radius: _hitboxRadius, anchor: Anchor.center));
+
+    await add(
+      TimerComponent(
+        period: _initialShieldTime,
+        removeOnFinish: true,
+        onTick: () => _isInitialShieldActive = false,
+      ),
+    );
   }
 
   @override
@@ -131,6 +141,10 @@ class SpaceshipComponent extends PositionComponent
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (_isInitialShieldActive) {
+      return;
+    }
+
     if (other is PlanetComponent) {
       if (intersectionPoints.length == 2) {
         final mid =
@@ -155,6 +169,13 @@ class SpaceshipComponent extends PositionComponent
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
+
+    if (_isInitialShieldActive) {
+      if (other is PlanetComponent) {
+        other.removeFromParent();
+      }
+      return;
+    }
 
     if (other is PlanetComponent) {
       if (other.isShaking == false) {

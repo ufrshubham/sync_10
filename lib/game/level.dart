@@ -140,8 +140,9 @@ class Level extends PositionComponent
             break;
 
           case 'HealthPickup':
-            final healthSpawner = SpawnComponent(
-              period: 15,
+            final healthSpawner = SpawnComponent.periodRange(
+              minPeriod: 15,
+              maxPeriod: 25,
               factory: (amount) {
                 return HealthPickupComponent(
                   anchor: Anchor.center,
@@ -160,8 +161,9 @@ class Level extends PositionComponent
             break;
 
           case 'FuelPickup':
-            final fuelSpawner = SpawnComponent(
-              period: 20,
+            final fuelSpawner = SpawnComponent.periodRange(
+              minPeriod: 15,
+              maxPeriod: 25,
               factory: (amount) {
                 return FuelPickupComponent(
                   anchor: Anchor.center,
@@ -180,8 +182,9 @@ class Level extends PositionComponent
             break;
 
           case 'EnergyPickup':
-            final energySpawner = SpawnComponent(
-              period: 10,
+            final energySpawner = SpawnComponent.periodRange(
+              minPeriod: 15,
+              maxPeriod: 25,
               factory: (amount) {
                 return EnergyPickupComponent(
                   anchor: Anchor.center,
@@ -233,7 +236,7 @@ class Level extends PositionComponent
       SpriteComponent(
         sprite: Sprite(game.images.fromCache('Radar.png')),
         size: ancestor.miniMap.viewport.virtualSize,
-      )..opacity = 0.2,
+      )..opacity = 0.6,
     );
 
     ancestor.updateSyncronToCollect(_syncronsToCollect);

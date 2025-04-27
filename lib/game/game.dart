@@ -159,13 +159,24 @@ class Sync10Game extends FlameGame
     _router.pushNamed(RetryMenu.id);
   }
 
-  Future<void> _onSubmitPressed(String duoName, int time) async {
+  Future<bool> _onSubmitPressed(String duoName, int time) async {
     final authResponse = await client.auth.signInAnonymously();
     if (authResponse.session != null) {
-      await client.from('Leaderboard').insert({
-        'DuoName': duoName,
-        'Time': time,
-      });
+      final result =
+          await client.from('Leaderboard').insert({
+            'DuoName': duoName,
+            'Time': time,
+          }).select();
+
+      if (result.isNotEmpty) {
+        final data = result.first;
+        final addedDuoName = data['DuoName'] as String?;
+
+        if (addedDuoName != null) {
+          return true;
+        }
+      }
     }
+    return false;
   }
 }

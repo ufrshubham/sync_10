@@ -76,14 +76,16 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
           ? InputComponent(
             keyCallbacks: {
               LogicalKeyboardKey.keyP: onPausePressed,
-              LogicalKeyboardKey.keyC: () => onLevelCompleted.call(3),
+              LogicalKeyboardKey.keyC:
+                  () => onLevelCompleted.call(_level.levelTime),
               LogicalKeyboardKey.keyG: onGameOver,
             },
           )
           : GamepadComponenet(
             keyCallbacks: {
               LogicalKeyboardKey.keyP: onPausePressed,
-              LogicalKeyboardKey.keyC: () => onLevelCompleted.call(3),
+              LogicalKeyboardKey.keyC:
+                  () => onLevelCompleted.call(_level.levelTime),
               LogicalKeyboardKey.keyG: onGameOver,
             },
           );

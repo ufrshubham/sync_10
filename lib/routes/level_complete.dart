@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-typedef OnSubmitCallback = void Function(String, int);
+typedef OnSubmitCallback = Future<bool> Function(String, int);
 
 class LevelComplete extends StatefulWidget {
   const LevelComplete({
     required this.levelTime,
     super.key,
     this.onSubmitPressed,
-    this.onNextPressed,
     this.onRetryPressed,
     this.onExitPressed,
   });
@@ -16,7 +15,6 @@ class LevelComplete extends StatefulWidget {
 
   final int levelTime;
 
-  final VoidCallback? onNextPressed;
   final VoidCallback? onRetryPressed;
   final VoidCallback? onExitPressed;
   final OnSubmitCallback? onSubmitPressed;
@@ -56,19 +54,53 @@ class _LevelCompleteState extends State<LevelComplete> {
                   },
                 ),
                 const SizedBox(height: 15),
-                SizedBox(
-                  width: 150,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        widget.onSubmitPressed?.call(
-                          _duoNameController.text,
-                          widget.levelTime,
-                        );
-                      }
-                    },
-                    child: const Text('Submit'),
-                  ),
+                ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: _duoNameController,
+                  builder: (context, value, child) {
+                    return SizedBox(
+                      width: 150,
+                      child: OutlinedButton(
+                        onPressed:
+                            value.text.isNotEmpty
+                                ? () {
+                                  if (_formKey.currentState!.validate()) {
+                                    widget.onSubmitPressed
+                                        ?.call(
+                                          _duoNameController.text,
+                                          widget.levelTime,
+                                        )
+                                        .then((result) {
+                                          if (result) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  'Submitted successfully!',
+                                                ),
+                                              ),
+                                            );
+
+                                            widget.onExitPressed?.call();
+                                          } else {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  'Submission failed!',
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        });
+                                  }
+                                }
+                                : null,
+                        child: const Text('Submit'),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 5),
                 SizedBox(

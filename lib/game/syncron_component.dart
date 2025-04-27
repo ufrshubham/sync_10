@@ -66,8 +66,8 @@ class SyncronComponent extends PositionComponent
     } else {
       canvas.drawCircle(
         Offset(position.x, position.y),
-        30,
-        Paint()..color = const Color.fromARGB(255, 188, 228, 245),
+        40,
+        Paint()..color = const Color.fromARGB(255, 111, 0, 255),
       );
     }
   }

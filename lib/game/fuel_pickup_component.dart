@@ -59,7 +59,7 @@ class FuelPickupComponent extends PositionComponent with HasAncestor<Gameplay> {
     } else {
       canvas.drawCircle(
         Offset(position.x, position.y),
-        30,
+        20,
         Paint()..color = const Color.fromARGB(255, 68, 168, 225),
       );
     }

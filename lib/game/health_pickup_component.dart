@@ -60,7 +60,7 @@ class HealthPickupComponent extends PositionComponent
     } else {
       canvas.drawCircle(
         Offset(position.x, position.y),
-        30,
+        20,
         Paint()..color = const Color.fromARGB(255, 225, 69, 69),
       );
     }
