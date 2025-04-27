@@ -58,15 +58,36 @@ class SpaceshipComponent extends PositionComponent
     );
     await add(_spaceShipSprite);
 
+    await _setupFlames();
+
+    await add(
+      _hitbox = RectangleHitbox(
+        size: _spaceShipSprite.size,
+        anchor: Anchor.center,
+      ),
+    );
+  }
+
+  Future<void> _setupFlames() async {
+    final flameSpritesLow = [
+      await Sprite.load('SpaceshipFlamesLow-1.png'),
+      await Sprite.load('SpaceshipFlamesLow-2.png'),
+    ];
+
+    final flameSpritesHigh = [
+      await Sprite.load('SpaceshipFlamesHigh-1.png'),
+      await Sprite.load('SpaceshipFlamesHigh-2.png'),
+    ];
+
     final animation = {
-      _FlameSprites.flameNormal: SpriteAnimation.spriteList([
-        await Sprite.load('SpaceshipFlamesLow-1.png'),
-        await Sprite.load('SpaceshipFlamesLow-2.png'),
-      ], stepTime: 0.1),
-      _FlameSprites.flameBoost: SpriteAnimation.spriteList([
-        await Sprite.load('SpaceshipFlamesHigh-1.png'),
-        await Sprite.load('SpaceshipFlamesHigh-2.png'),
-      ], stepTime: 0.1),
+      _FlameSprites.flameNormal: SpriteAnimation.spriteList(
+        flameSpritesLow,
+        stepTime: 0.1,
+      ),
+      _FlameSprites.flameBoost: SpriteAnimation.spriteList(
+        flameSpritesHigh,
+        stepTime: 0.1,
+      ),
     };
 
     _flameLeft = SpriteAnimationGroupComponent<_FlameSprites>(
@@ -87,13 +108,6 @@ class SpaceshipComponent extends PositionComponent
 
     await _spaceShipSprite.add(_flameLeft);
     await _spaceShipSprite.add(_flameRight);
-
-    await add(
-      _hitbox = RectangleHitbox(
-        size: _spaceShipSprite.size,
-        anchor: Anchor.center,
-      ),
-    );
   }
 
   @override

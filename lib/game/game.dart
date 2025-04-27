@@ -75,40 +75,6 @@ class Sync10Game extends FlameGame
   Future<void> onLoad() async {
     await add(_router);
     client = Supabase.instance.client;
-    // client.auth.onAuthStateChange.listen((data) {
-    //   switch (data.event) {
-    //     case AuthChangeEvent.signedIn:
-    //       print('User signed in: ${data.session?.user.id}');
-    //       break;
-    //     case AuthChangeEvent.signedOut:
-    //       print('User signed out: ${data.session?.user.id}');
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // });
-
-    // final authResponse = await client.auth.signInAnonymously();
-
-    // if (authResponse.session != null) {
-    //   print('User ID: ${authResponse.session?.user.id}');
-    //   print('Access Token: ${authResponse.session?.accessToken}');
-    //   print('Refresh Token: ${authResponse.session?.refreshToken}');
-    //   print('Expires at: ${authResponse.session?.expiresAt}');
-    //   print('User email: ${authResponse.session?.user.email}');
-    //   print('User phone: ${authResponse.session?.user.phone}');
-    //   print('User app_metadata: ${authResponse.session?.user.appMetadata}');
-    //   print('User user_metadata: ${authResponse.session?.user.userMetadata}');
-    //   print('User created at: ${authResponse.session?.user.createdAt}');
-    //   print('User updated at: ${authResponse.session?.user.updatedAt}');
-    //   print(
-    //     'User email confirmed at: ${authResponse.session?.user.emailConfirmedAt}',
-    //   );
-    //   print(
-    //     'User phone confirmed at: ${authResponse.session?.user.phoneConfirmedAt}',
-    //   );
-    //   print('User identities: ${authResponse.session?.user.identities}');
-    // }
   }
 
   @override
@@ -199,12 +165,10 @@ class Sync10Game extends FlameGame
   Future<void> _onSubmitPressed(String value) async {
     final authResponse = await client.auth.signInAnonymously();
     if (authResponse.session != null) {
-      final response = await client.from('Leaderboard').insert({
+      await client.from('Leaderboard').insert({
         'DuoName': value,
         'Time': Random().nextInt(1000),
       });
-
-      print('Response: $response');
     }
   }
 }
