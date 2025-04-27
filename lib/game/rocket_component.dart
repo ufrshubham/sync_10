@@ -5,6 +5,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:sync_10/game/bullet_component.dart';
 import 'package:sync_10/game/health_pickup_component.dart';
+import 'package:sync_10/game/hit_effect_component.dart';
 import 'package:sync_10/game/level.dart';
 import 'package:sync_10/game/orb_component.dart';
 import 'package:sync_10/game/planet_component.dart';
@@ -119,7 +120,6 @@ class SpaceshipComponent extends PositionComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is PlanetComponent) {
       if (intersectionPoints.length == 2) {
-        // Calculate the collision normal and separation distance.
         final mid =
             (intersectionPoints.elementAt(0) +
                 intersectionPoints.elementAt(1)) /
@@ -146,7 +146,19 @@ class SpaceshipComponent extends PositionComponent
     if (other is PlanetComponent) {
       if (other.isShaking == false) {
         _health = clampDouble(_health - other.damageValue, 0, 100);
-        ancestor.updateHealthBar(_health);
+        if (intersectionPoints.length == 2) {
+          final mid =
+              (intersectionPoints.elementAt(0) +
+                  intersectionPoints.elementAt(1)) /
+              2;
+          parent.add(
+            HitEffectComponent(
+              position: mid,
+              scale: Vector2.all(0.5),
+              angle: _moveDirection.screenAngle(),
+            ),
+          );
+        }
       }
       other.shake(_moveDirection);
     } else if (other is OrbComponent) {

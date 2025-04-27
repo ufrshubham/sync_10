@@ -171,6 +171,14 @@ class Level extends PositionComponent
           ancestor.miniMap.viewport.virtualSize.y -
           20,
     );
+
+    // TODO: Add a background to the miniMap
+    // ancestor.miniMap.backdrop.add(
+    //   SpriteComponent(
+    //     sprite: Sprite(game.images.fromCache('Planet-1.png')),
+    //     size: ancestor.miniMap.viewport.virtualSize,
+    //   )..opacity = 0.5,
+    // );
   }
 
   void onFinish(Set<Vector2> intersectionPoints, ShapeHitbox other) {
