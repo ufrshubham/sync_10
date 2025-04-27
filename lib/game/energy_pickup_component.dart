@@ -3,15 +3,15 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
 
-class HealthPickupComponent extends PositionComponent {
-  HealthPickupComponent({
+class EnergyPickupComponent extends PositionComponent {
+  EnergyPickupComponent({
     super.position,
     super.anchor,
     Vector2? scale,
     super.children,
   }) : _scale = scale ?? Vector2.all(1.0);
 
-  double get healthValue => 20.0;
+  double get energyValue => 25.0;
   final Vector2 _scale;
 
   @override
@@ -21,8 +21,8 @@ class HealthPickupComponent extends PositionComponent {
       anchor: Anchor.center,
       scale: _scale,
     )..opacity = 0.3;
-    final healthSprite = SpriteComponent(
-      sprite: await Sprite.load('CollectableHeart.png'),
+    final energySprite = SpriteComponent(
+      sprite: await Sprite.load('CollectableEnergy.png'),
       anchor: Anchor.center,
       scale: _scale * 0.6,
       children: [
@@ -38,7 +38,7 @@ class HealthPickupComponent extends PositionComponent {
       ],
     );
 
-    await addAll([healthSprite, glassSprite]);
+    await addAll([energySprite, glassSprite]);
     await add(
       CircleHitbox(
         radius: glassSprite.size.x * 0.5 * _scale.x * 0.9,
@@ -46,6 +46,6 @@ class HealthPickupComponent extends PositionComponent {
         collisionType: CollisionType.passive,
       ),
     );
-    await add(TimerComponent(period: 15, onTick: removeFromParent));
+    await add(TimerComponent(period: 8, onTick: removeFromParent));
   }
 }

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:sync_10/game/bullet_component.dart';
+import 'package:sync_10/game/energy_pickup_component.dart';
 import 'package:sync_10/game/fuel_pickup_component.dart';
 import 'package:sync_10/game/health_pickup_component.dart';
 import 'package:sync_10/game/hit_effect_component.dart';
@@ -37,6 +38,7 @@ class SpaceshipComponent extends PositionComponent
   var _timeSinceLastFire = 0.0;
   var _health = 100.0;
   var _fuel = 100.0;
+  var _energy = 100.0;
 
   final _moveDirection = Vector2(0, 0);
   final Vector2 _scale;
@@ -52,6 +54,7 @@ class SpaceshipComponent extends PositionComponent
   static const _fireDelay = 0.5;
   static const _fuelConsumption = 1.0;
   static const _fuelConsumptionBoost = 2.0;
+  static const _energyConsumption = 1.0;
 
   int get nOrbsCollected => _nOrbsCollected;
   double get health => _health;
@@ -172,11 +175,15 @@ class SpaceshipComponent extends PositionComponent
     } else if (other is HealthPickupComponent) {
       other.removeFromParent();
       _health = clampDouble(_health + other.healthValue, 0, 100);
-      ancestor.updateHealthBar(_health);
+      ancestor.updateHealthBar(_health, increase: true);
     } else if (other is FuelPickupComponent) {
       other.removeFromParent();
       _fuel = clampDouble(_fuel + other.fuelValue, 0, 100);
       ancestor.updateFuelBar(_fuel, increase: true);
+    } else if (other is EnergyPickupComponent) {
+      other.removeFromParent();
+      _energy = clampDouble(_energy + other.energyValue, 0, 100);
+      ancestor.updateEnergyBar(_energy, increase: true);
     }
   }
 
@@ -311,6 +318,8 @@ class SpaceshipComponent extends PositionComponent
       );
       parent.add(bullet);
       _timeSinceLastFire = 0;
+      _energy = clampDouble(_energy - _energyConsumption, 0, 100);
+      ancestor.updateEnergyBar(_energy);
     }
   }
 }

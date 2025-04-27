@@ -122,12 +122,12 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
     // game.router.pushNamed(GameOver.id, replace: true);
   }
 
-  void updateHealthBar(double health) {
-    _hud.updateHealthBar(health);
+  void updateHealthBar(double health, {bool increase = false}) {
+    _hud.updateHealthBar(health, increase: increase);
   }
 
-  void updateEnergyBar(double energy) {
-    _hud.updateEnergyBar(energy);
+  void updateEnergyBar(double energy, {bool increase = false}) {
+    _hud.updateEnergyBar(energy, increase: increase);
   }
 
   void updateFuelBar(double fuel, {bool increase = false}) {

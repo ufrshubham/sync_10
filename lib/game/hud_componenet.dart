@@ -143,10 +143,10 @@ class HudComponent extends PositionComponent
     return addAll([_fuelBar, _fuelBarBackground]);
   }
 
-  void updateHealthBar(double health) {
+  void updateHealthBar(double health, {bool increase = false}) {
     _healthBar.size.y = _healthBarBackground.size.y * (health / 100);
 
-    if (_isHealthBarEffectRunning == false) {
+    if (increase && _isHealthBarEffectRunning == false) {
       _isHealthBarEffectRunning = true;
 
       _healthBarIcon.add(
@@ -159,10 +159,10 @@ class HudComponent extends PositionComponent
     }
   }
 
-  void updateEnergyBar(double energy) {
+  void updateEnergyBar(double energy, {bool increase = false}) {
     _energyBar.size.y = _energyBarBackground.size.y * (energy / 100);
 
-    if (_isEnergyBarEffectRunning == false) {
+    if (increase && _isEnergyBarEffectRunning == false) {
       _isEnergyBarEffectRunning = true;
 
       _energyBarIcon.add(
