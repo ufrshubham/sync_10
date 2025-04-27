@@ -1,9 +1,13 @@
+import 'dart:ui';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
+import 'package:sync_10/routes/game_play.dart';
 
-class HealthPickupComponent extends PositionComponent {
+class HealthPickupComponent extends PositionComponent
+    with HasAncestor<Gameplay> {
   HealthPickupComponent({
     super.position,
     super.anchor,
@@ -47,5 +51,18 @@ class HealthPickupComponent extends PositionComponent {
       ),
     );
     await add(TimerComponent(period: 15, onTick: removeFromParent));
+  }
+
+  @override
+  void renderTree(Canvas canvas) {
+    if (CameraComponent.currentCamera == ancestor.camera) {
+      super.renderTree(canvas);
+    } else {
+      canvas.drawCircle(
+        Offset(position.x, position.y),
+        30,
+        Paint()..color = const Color.fromARGB(255, 225, 69, 69),
+      );
+    }
   }
 }

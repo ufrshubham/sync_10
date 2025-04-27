@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
+import 'package:sync_10/routes/game_play.dart';
 
-class FuelPickupComponent extends PositionComponent {
+class FuelPickupComponent extends PositionComponent with HasAncestor<Gameplay> {
   FuelPickupComponent({
     super.position,
     super.anchor,
@@ -47,5 +50,18 @@ class FuelPickupComponent extends PositionComponent {
       ),
     );
     await add(TimerComponent(period: 10, onTick: removeFromParent));
+  }
+
+  @override
+  void renderTree(Canvas canvas) {
+    if (CameraComponent.currentCamera == ancestor.camera) {
+      super.renderTree(canvas);
+    } else {
+      canvas.drawCircle(
+        Offset(position.x, position.y),
+        30,
+        Paint()..color = const Color.fromARGB(255, 68, 168, 225),
+      );
+    }
   }
 }

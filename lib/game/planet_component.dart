@@ -62,7 +62,7 @@ class PlanetComponent extends PositionComponent
     } else {
       canvas.drawCircle(
         Offset(position.x, position.y),
-        20,
+        15,
         Paint()..color = const Color.fromARGB(255, 197, 223, 197),
       );
     }

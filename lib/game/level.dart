@@ -11,7 +11,7 @@ import 'package:sync_10/game/energy_pickup_component.dart';
 import 'package:sync_10/game/fuel_pickup_component.dart';
 import 'package:sync_10/game/game.dart';
 import 'package:sync_10/game/health_pickup_component.dart';
-import 'package:sync_10/game/orb_component.dart';
+import 'package:sync_10/game/syncron_component.dart';
 import 'package:sync_10/game/planet_component.dart';
 import 'package:sync_10/game/spaceship_component.dart';
 import 'package:sync_10/game/star_nest_component.dart';
@@ -97,7 +97,11 @@ class Level extends PositionComponent
                   ),
                 );
             await add(
-              OrbComponent(position: randomPosition, anchor: Anchor.center),
+              SyncronComponent(
+                position: randomPosition,
+                anchor: Anchor.center,
+                scale: Vector2.all(0.3),
+              ),
             );
             break;
 
