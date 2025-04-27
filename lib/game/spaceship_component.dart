@@ -39,6 +39,7 @@ class SpaceshipComponent extends PositionComponent
   var _health = 100.0;
   var _fuel = 100.0;
   var _energy = 100.0;
+  var _isGameOver = false;
 
   final _moveDirection = Vector2(0, 0);
   final Vector2 _scale;
@@ -82,6 +83,11 @@ class SpaceshipComponent extends PositionComponent
     _updatePosition(dt);
     _scaleFlames();
     _handleFire(dt);
+    if (_isGameOver == false && _fuel == 0) {
+      _isGameOver = true;
+      ancestor.input.isListening = false;
+      ancestor.fadeOut().then((_) => ancestor.onGameOver());
+    }
   }
 
   @override
@@ -244,7 +250,7 @@ class SpaceshipComponent extends PositionComponent
   }
 
   void _scaleFlames() {
-    final flameAdjustment = -ancestor.input.hAxis * 0.25;
+    final flameAdjustment = (_fuel > 0 ? -ancestor.input.hAxis : _fuel) * 0.25;
     _flameLeft.scale.y = _speedFactor - flameAdjustment;
     _flameRight.scale.y = _speedFactor + flameAdjustment;
   }
@@ -255,7 +261,8 @@ class SpaceshipComponent extends PositionComponent
       _angularSpeed =
           lerpDouble(
             _angularSpeed,
-            ancestor.input.hAxis * _maxSlowDownAngularSpeed,
+            (_fuel > 0 ? ancestor.input.hAxis : _fuel) *
+                _maxSlowDownAngularSpeed,
             _maxSlowDownAngularAcceleration * dt,
           )!;
     } else {
@@ -263,7 +270,7 @@ class SpaceshipComponent extends PositionComponent
       _angularSpeed =
           lerpDouble(
             _angularSpeed,
-            ancestor.input.hAxis * _maxAngularSpeed,
+            (_fuel > 0 ? ancestor.input.hAxis : _fuel) * _maxAngularSpeed,
             _angularAcceleration * dt,
           )!;
     }
@@ -276,7 +283,7 @@ class SpaceshipComponent extends PositionComponent
       _speed =
           lerpDouble(
             _speed,
-            ancestor.input.vAxis * _maxBoostSpeed,
+            ((_fuel > 0) ? ancestor.input.vAxis : _fuel) * _maxBoostSpeed,
             _maxBoostAcceleration * dt,
           )!;
 
@@ -293,7 +300,7 @@ class SpaceshipComponent extends PositionComponent
       _speed =
           lerpDouble(
             _speed,
-            ancestor.input.vAxis * _maxSpeed,
+            ((_fuel > 0) ? ancestor.input.vAxis : _fuel) * _maxSpeed,
             _acceleration * dt,
           )!;
 
