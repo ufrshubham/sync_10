@@ -7,24 +7,9 @@ import 'package:flutter/material.dart' hide Viewport;
 
 class HudComponent extends PositionComponent
     with ParentIsA<Viewport>, HasGameReference {
-  // final _life = TextComponent(
-  //   text: 'x3',
-  //   anchor: Anchor.centerLeft,
-  //   textRenderer: TextPaint(
-  //     style: const TextStyle(color: Colors.black, fontSize: 10),
-  //   ),
-  // );
-
-  // final _score = TextComponent(
-  //   text: 'x0',
-  //   anchor: Anchor.centerLeft,
-  //   textRenderer: TextPaint(
-  //     style: const TextStyle(color: Colors.black, fontSize: 10),
-  //   ),
-  // );
-
   late final RectangleComponent _healthBar;
   late final RectangleComponent _healthBarBackground;
+  late final SpriteComponent _healthBarIcon;
   bool _isHealthBarEffectRunning = false;
 
   @override
@@ -50,8 +35,17 @@ class HudComponent extends PositionComponent
         _healthBarBackground.size.y,
       ),
       position: _healthBarBackground.position,
-      paint: Paint()..color = Colors.green,
+      paint: Paint()..color = Colors.red,
       priority: 1,
+    );
+
+    _healthBar.add(
+      _healthBarIcon = SpriteComponent(
+        sprite: await Sprite.load('CollectableHeart.png'),
+        anchor: Anchor.center,
+        position: Vector2(_healthBar.size.x * 0.5, -10),
+        scale: Vector2.all(0.3),
+      ),
     );
 
     await addAll([_healthBar, _healthBarBackground]);
@@ -66,16 +60,10 @@ class HudComponent extends PositionComponent
     if (_isHealthBarEffectRunning == false) {
       _isHealthBarEffectRunning = true;
 
-      _healthBarBackground.add(
+      _healthBarIcon.add(
         ScaleEffect.by(
-          Vector2(1.5, 1),
-          EffectController(duration: 0.1, alternate: true, repeatCount: 3),
-        ),
-      );
-      _healthBar.add(
-        ScaleEffect.by(
-          Vector2(1.5, 1),
-          EffectController(duration: 0.1, alternate: true, repeatCount: 3),
+          Vector2(2, 1.5),
+          EffectController(duration: 0.1, alternate: true, repeatCount: 2),
           onComplete: () => _isHealthBarEffectRunning = false,
         ),
       );
