@@ -1,6 +1,7 @@
 import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sync_10/game/game.dart';
@@ -68,13 +69,22 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
   CameraComponent? get debugCamera => cameras[CameraType.debug];
 
   late final HudComponent _hud;
-  late final input = GamepadComponenet(
-    keyCallbacks: {
-      LogicalKeyboardKey.keyP: onPausePressed,
-      LogicalKeyboardKey.keyC: () => onLevelCompleted.call(3),
-      LogicalKeyboardKey.keyO: onGameOver,
-    },
-  );
+  late final input =
+      kIsWeb
+          ? InputComponent(
+            keyCallbacks: {
+              LogicalKeyboardKey.keyP: onPausePressed,
+              LogicalKeyboardKey.keyC: () => onLevelCompleted.call(3),
+              LogicalKeyboardKey.keyO: onGameOver,
+            },
+          )
+          : GamepadComponenet(
+            keyCallbacks: {
+              LogicalKeyboardKey.keyP: onPausePressed,
+              LogicalKeyboardKey.keyC: () => onLevelCompleted.call(3),
+              LogicalKeyboardKey.keyO: onGameOver,
+            },
+          );
 
   @override
   Future<void> onLoad() async {
