@@ -30,6 +30,10 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
   var _isPatroling = false;
   MoveEffect? _moveEffect;
 
+  double get damageValue => 10;
+  var _isShaking = false;
+  bool get isShaking => _isShaking;
+
   var _timeSinceLastFire = 0.0;
 
   static const _fireDelay = 2;
@@ -125,6 +129,48 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
   }
 
   void takeBulletHit(double damage) {
+    _health = clampDouble(_health - damage, 0, 100);
+    if (_health == 0) {
+      for (var i = 0; i < 2; i++) {
+        final spawnPosition =
+            position +
+            Vector2(
+              _random.nextDouble() * 50 - 25,
+              _random.nextDouble() * 50 - 25,
+            );
+        parent.add(
+          EnemyComponent(
+            patrolArea: patrolArea,
+            position: spawnPosition,
+            scale: Vector2.all(0.25),
+          ),
+        );
+      }
+
+      add(
+        ScaleEffect.to(
+          Vector2.zero(),
+          EffectController(duration: 0.25),
+          onComplete: removeFromParent,
+        ),
+      );
+    }
+  }
+
+  void shake(Vector2 moveDirection) {
+    if (_isShaking == false) {
+      _isShaking = true;
+      _spaceshipSprite.add(
+        MoveEffect.by(
+          moveDirection.normalized() * 5,
+          EffectController(duration: 0.06, alternate: true, repeatCount: 3),
+          onComplete: () => _isShaking = false,
+        ),
+      );
+    }
+  }
+
+  void takeDamage(double damage) {
     _health = clampDouble(_health - damage, 0, 100);
     if (_health == 0) {
       for (var i = 0; i < 2; i++) {

@@ -29,6 +29,10 @@ class EnemyComponent extends PositionComponent with ParentIsA<Level> {
   var _isPatroling = false;
   MoveEffect? _moveEffect;
 
+  double get damageValue => 10;
+  var _isShaking = false;
+  bool get isShaking => _isShaking;
+
   var _timeSinceLastFire = 0.0;
 
   static const _fireDelay = 2;
@@ -131,6 +135,32 @@ class EnemyComponent extends PositionComponent with ParentIsA<Level> {
   }
 
   void takeBulletHit(double damage) {
+    _health = clampDouble(_health - damage, 0, 30);
+    if (_health == 0) {
+      add(
+        ScaleEffect.to(
+          Vector2.zero(),
+          EffectController(duration: 0.25),
+          onComplete: removeFromParent,
+        ),
+      );
+    }
+  }
+
+  void shake(Vector2 moveDirection) {
+    if (_isShaking == false) {
+      _isShaking = true;
+      _enemySprite.add(
+        MoveEffect.by(
+          moveDirection.normalized() * 5,
+          EffectController(duration: 0.06, alternate: true, repeatCount: 3),
+          onComplete: () => _isShaking = false,
+        ),
+      );
+    }
+  }
+
+  void takeDamage(double damage) {
     _health = clampDouble(_health - damage, 0, 30);
     if (_health == 0) {
       add(

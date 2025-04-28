@@ -5,6 +5,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:sync_10/game/actors/asteroid_component.dart';
 import 'package:sync_10/game/actors/bullet_component.dart';
+import 'package:sync_10/game/actors/enemy_component.dart';
+import 'package:sync_10/game/actors/enemy_ship_component.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/game/actors/player_detector.dart';
 import 'package:sync_10/game/hit_effect_component.dart';
@@ -62,6 +64,7 @@ class SpaceshipComponent extends PositionComponent
   static const _energyConsumptionSlowDown = 15;
   static const _initialShieldTime = 1.0;
   static const _bulletDamage = 40.0;
+  static const _damageValue = 50.0;
 
   double get health => _health;
 
@@ -144,7 +147,10 @@ class SpaceshipComponent extends PositionComponent
       return;
     }
 
-    if (other is PlanetComponent || other is AsteroidComponent) {
+    if (other is PlanetComponent ||
+        other is AsteroidComponent ||
+        other is EnemyShipComponent ||
+        other is EnemyComponent) {
       if (intersectionPoints.length == 2) {
         final mid =
             (intersectionPoints.elementAt(0) +
@@ -198,6 +204,46 @@ class SpaceshipComponent extends PositionComponent
     } else if (other is AsteroidComponent) {
       if (other.isShaking == false) {
         other.damage();
+        _health = clampDouble(_health - other.damageValue, 0, 100);
+        ancestor.updateHealthBar(_health);
+        if (intersectionPoints.length == 2) {
+          final mid =
+              (intersectionPoints.elementAt(0) +
+                  intersectionPoints.elementAt(1)) /
+              2;
+          parent.add(
+            HitEffectComponent(
+              position: mid,
+              scale: Vector2.all(0.5),
+              angle: _moveDirection.screenAngle(),
+            ),
+          );
+        }
+      }
+      other.shake(_moveDirection);
+    } else if (other is EnemyShipComponent) {
+      if (other.isShaking == false) {
+        other.takeDamage(_damageValue);
+        _health = clampDouble(_health - other.damageValue, 0, 100);
+        ancestor.updateHealthBar(_health);
+        if (intersectionPoints.length == 2) {
+          final mid =
+              (intersectionPoints.elementAt(0) +
+                  intersectionPoints.elementAt(1)) /
+              2;
+          parent.add(
+            HitEffectComponent(
+              position: mid,
+              scale: Vector2.all(0.5),
+              angle: _moveDirection.screenAngle(),
+            ),
+          );
+        }
+      }
+      other.shake(_moveDirection);
+    } else if (other is EnemyComponent) {
+      if (other.isShaking == false) {
+        other.takeDamage(_damageValue);
         _health = clampDouble(_health - other.damageValue, 0, 100);
         ancestor.updateHealthBar(_health);
         if (intersectionPoints.length == 2) {
