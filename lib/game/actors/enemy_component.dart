@@ -36,6 +36,9 @@ class EnemyComponent extends PositionComponent with ParentIsA<Level> {
 
   @override
   Future<void> onLoad() async {
+    scale = Vector2.zero();
+    await add(ScaleEffect.to(Vector2.all(1), EffectController(duration: 0.25)));
+
     final sprites = [
       await Sprite.load('EnemyRed-1.png'),
       await Sprite.load('EnemyRed-2.png'),
@@ -71,7 +74,7 @@ class EnemyComponent extends PositionComponent with ParentIsA<Level> {
       CircleHitbox(
         radius: _enemySprite.size.x * 0.8 * _scale.x,
         anchor: Anchor.center,
-      )..debugMode = true,
+      ),
     );
     super.onLoad();
   }
