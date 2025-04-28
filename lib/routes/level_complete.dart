@@ -35,11 +35,16 @@ class _LevelCompleteState extends State<LevelComplete> {
         key: _formKey,
         child: Center(
           child: SizedBox(
-            width: 300,
+            width: 400,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Level Completed', style: TextStyle(fontSize: 30)),
+                const Text('Congratulations!', style: TextStyle(fontSize: 30)),
+                const SizedBox(height: 15),
+                Text(
+                  '''Your level time was ${widget.levelTime} seconds!''',
+                  style: const TextStyle(fontSize: 20),
+                ),
                 const SizedBox(height: 15),
                 TextFormField(
                   controller: _duoNameController,

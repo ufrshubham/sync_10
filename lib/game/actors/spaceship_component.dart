@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:sync_10/game/actors/asteroid_component.dart';
 import 'package:sync_10/game/actors/bullet_component.dart';
 import 'package:sync_10/game/actors/enemy_component.dart';
@@ -11,6 +12,7 @@ import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/game/actors/player_detector.dart';
 import 'package:sync_10/game/actors/spaceman_component.dart';
 import 'package:sync_10/game/effect_components/hit_effect_component.dart';
+import 'package:sync_10/game/game.dart';
 import 'package:sync_10/game/level.dart';
 import 'package:sync_10/game/pickup_components/energy_pickup_component.dart';
 import 'package:sync_10/game/pickup_components/fuel_pickup_component.dart';
@@ -21,7 +23,11 @@ import 'package:sync_10/routes/game_play.dart';
 enum _FlameSprites { flameNormal, flameBoost }
 
 class SpaceshipComponent extends PositionComponent
-    with CollisionCallbacks, ParentIsA<Level>, HasAncestor<Gameplay> {
+    with
+        CollisionCallbacks,
+        ParentIsA<Level>,
+        HasAncestor<Gameplay>,
+        HasGameReference<Sync10Game> {
   SpaceshipComponent({
     super.position,
     super.anchor,
@@ -203,6 +209,9 @@ class SpaceshipComponent extends PositionComponent
               angle: _moveDirection.screenAngle(),
             ),
           );
+          if (game.sfxValueNotifier.value) {
+            FlameAudio.play(Sync10Game.hurtSfx);
+          }
         }
       }
       other.shake(_moveDirection);
@@ -223,6 +232,9 @@ class SpaceshipComponent extends PositionComponent
               angle: _moveDirection.screenAngle(),
             ),
           );
+          if (game.sfxValueNotifier.value) {
+            FlameAudio.play(Sync10Game.hurtSfx);
+          }
         }
       }
       other.shake(_moveDirection);
@@ -243,6 +255,9 @@ class SpaceshipComponent extends PositionComponent
               angle: _moveDirection.screenAngle(),
             ),
           );
+          if (game.sfxValueNotifier.value) {
+            FlameAudio.play(Sync10Game.hurtSfx);
+          }
         }
       }
       other.shake(_moveDirection);
@@ -263,6 +278,9 @@ class SpaceshipComponent extends PositionComponent
               angle: _moveDirection.screenAngle(),
             ),
           );
+          if (game.sfxValueNotifier.value) {
+            FlameAudio.play(Sync10Game.hurtSfx);
+          }
         }
       }
       other.shake(_moveDirection);
@@ -448,6 +466,9 @@ class SpaceshipComponent extends PositionComponent
         direction: -_moveDirection,
       );
       parent.add(bullet);
+      if (game.sfxValueNotifier.value) {
+        FlameAudio.play(Sync10Game.fireSfx);
+      }
       _timeSinceLastFire = 0;
       _energy = clampDouble(_energy - _energyConsumptionFire, 0, 100);
       ancestor.updateEnergyBar(_energy);

@@ -21,9 +21,12 @@ import 'package:sync_10/routes/settings.dart';
 class Sync10Game extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   static const bgm = 'bgm.mp3';
-  // static const jumpSfx = 'Jump.wav';
-  // static const collectSfx = 'Collect.wav';
-  // static const hurtSfx = 'Hurt.wav';
+  static const destroySfx = 'destroy.wav';
+  static const fireSfx = 'fire.wav';
+  static const hurtSfx = 'hurt.wav';
+  static const pickupSfx = 'pickup.wav';
+  static const syncronSfx = 'syncron.wav';
+  static const gameoverSfx = 'gameover.wav';
 
   final sfxValueNotifier = ValueNotifier(true);
   final musicValueNotifier = ValueNotifier(true);
@@ -91,7 +94,15 @@ class Sync10Game extends FlameGame
     await add(_router);
     client = Supabase.instance.client;
 
-    FlameAudio.audioCache.loadAll([bgm]);
+    FlameAudio.audioCache.loadAll([
+      bgm,
+      destroySfx,
+      fireSfx,
+      hurtSfx,
+      pickupSfx,
+      syncronSfx,
+      gameoverSfx,
+    ]);
   }
 
   @override
@@ -169,6 +180,9 @@ class Sync10Game extends FlameGame
   }
 
   void _showRetryMenu() {
+    if (sfxValueNotifier.value) {
+      FlameAudio.play(Sync10Game.gameoverSfx);
+    }
     pauseEngine();
     _router.pushNamed(RetryMenu.id);
   }

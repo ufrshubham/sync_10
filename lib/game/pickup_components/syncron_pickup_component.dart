@@ -3,12 +3,17 @@ import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
+import 'package:sync_10/game/game.dart';
 import 'package:sync_10/routes/game_play.dart';
 
 class SyncronPickupComponent extends PositionComponent
-    with CollisionCallbacks, HasAncestor<Gameplay> {
+    with
+        CollisionCallbacks,
+        HasAncestor<Gameplay>,
+        HasGameReference<Sync10Game> {
   SyncronPickupComponent({
     super.position,
     super.size,
@@ -96,6 +101,9 @@ class SyncronPickupComponent extends PositionComponent
           onComplete: removeFromParent,
         ),
       );
+      if (game.sfxValueNotifier.value) {
+        FlameAudio.play(Sync10Game.syncronSfx);
+      }
     }
   }
 }

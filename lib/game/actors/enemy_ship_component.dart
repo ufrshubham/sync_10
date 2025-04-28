@@ -5,15 +5,18 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sync_10/game/actors/bullet_component.dart';
 import 'package:sync_10/game/actors/enemy_component.dart';
 import 'package:sync_10/game/actors/player_detector.dart';
 import 'package:sync_10/game/effect_components/blast_effect_component.dart';
+import 'package:sync_10/game/game.dart';
 import 'package:sync_10/game/level.dart';
 
-class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
+class EnemyShipComponent extends PositionComponent
+    with ParentIsA<Level>, HasGameReference<Sync10Game> {
   EnemyShipComponent({required this.patrolArea, Vector2? scale, super.position})
     : _scale = scale ?? Vector2.all(1);
 
@@ -107,6 +110,9 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
           damage: _bulletDamage,
         );
         parent.add(bullet);
+        if (game.sfxValueNotifier.value) {
+          FlameAudio.play(Sync10Game.fireSfx);
+        }
       }
     } else {
       if (!_isPatroling) {
@@ -151,6 +157,9 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
       parent.add(
         BlastEffectComponent(position: position, scale: Vector2.all(0.4)),
       );
+      if (game.sfxValueNotifier.value) {
+        FlameAudio.play(Sync10Game.destroySfx);
+      }
 
       add(
         ScaleEffect.to(
@@ -197,6 +206,9 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
       parent.add(
         BlastEffectComponent(position: position, scale: Vector2.all(0.4)),
       );
+      if (game.sfxValueNotifier.value) {
+        FlameAudio.play(Sync10Game.destroySfx);
+      }
 
       add(
         ScaleEffect.to(

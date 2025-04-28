@@ -3,11 +3,13 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/animation.dart';
+import 'package:sync_10/game/game.dart';
 import 'package:sync_10/routes/game_play.dart';
 
 class EnergyPickupComponent extends PositionComponent
-    with HasAncestor<Gameplay> {
+    with HasAncestor<Gameplay>, HasGameReference<Sync10Game> {
   EnergyPickupComponent({
     super.position,
     super.anchor,
@@ -78,6 +80,10 @@ class EnergyPickupComponent extends PositionComponent
           onComplete: removeFromParent,
         ),
       );
+
+      if (game.sfxValueNotifier.value) {
+        FlameAudio.play(Sync10Game.pickupSfx);
+      }
     }
   }
 }

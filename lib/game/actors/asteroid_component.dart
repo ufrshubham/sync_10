@@ -4,13 +4,15 @@ import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:sync_10/game/effect_components/blast_effect_component.dart';
+import 'package:sync_10/game/game.dart';
 import 'package:sync_10/game/level.dart';
 import 'package:sync_10/routes/game_play.dart';
 
 class AsteroidComponent extends PositionComponent
-    with ParentIsA<Level>, HasAncestor<Gameplay> {
+    with ParentIsA<Level>, HasAncestor<Gameplay>, HasGameReference<Sync10Game> {
   AsteroidComponent({
     required this.moveDirection,
     super.position,
@@ -100,6 +102,9 @@ class AsteroidComponent extends PositionComponent
       parent.add(
         BlastEffectComponent(position: position, scale: Vector2.all(0.4)),
       );
+      if (game.sfxValueNotifier.value) {
+        FlameAudio.play(Sync10Game.destroySfx);
+      }
       removeFromParent();
     }
   }
