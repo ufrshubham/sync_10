@@ -9,7 +9,6 @@ import 'package:sync_10/game/hud_componenet.dart';
 import 'package:sync_10/game/input_component.dart';
 import 'package:sync_10/game/level.dart';
 import 'package:sync_10/game/shader_components/hyperspace_streaks_component.dart';
-import 'package:sync_10/game/shader_components/hyperspace_tunnel_component.dart';
 
 enum CameraType { primary, miniMap, debug }
 
@@ -34,7 +33,7 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
   final VoidCallback onGameOver;
 
   late final Level _level;
-  var isLevelCompleted = false;
+  bool isLevelCompleted = false;
   var _isSwitchingLevels = false;
   var _levelTime = 0;
 
