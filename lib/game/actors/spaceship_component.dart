@@ -9,6 +9,7 @@ import 'package:sync_10/game/actors/enemy_component.dart';
 import 'package:sync_10/game/actors/enemy_ship_component.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/game/actors/player_detector.dart';
+import 'package:sync_10/game/actors/spaceman_component.dart';
 import 'package:sync_10/game/effect_components/hit_effect_component.dart';
 import 'package:sync_10/game/level.dart';
 import 'package:sync_10/game/pickup_components/energy_pickup_component.dart';
@@ -45,6 +46,7 @@ class SpaceshipComponent extends PositionComponent
   var _energy = 100.0;
   var _isGameOver = false;
   var _isInitialShieldActive = true;
+  var _isManned = false;
 
   final _moveDirection = Vector2(0, 0);
   final Vector2 _scale;
@@ -94,6 +96,9 @@ class SpaceshipComponent extends PositionComponent
 
   @override
   void update(double dt) {
+    if (_isManned == false) {
+      return;
+    }
     _handleBoost(dt);
     _handleSlowDown(dt);
     _updatePosition(dt);
@@ -292,6 +297,10 @@ class SpaceshipComponent extends PositionComponent
       _health = clampDouble(_health - other.damage, 0, 100);
       ancestor.updateHealthBar(_health);
       other.removeFromParent();
+    } else if (other is SpacemanComponent) {
+      _isManned = true;
+      ancestor.camera.follow(this);
+      ancestor.miniMap.follow(this);
     }
   }
 

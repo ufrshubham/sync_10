@@ -11,6 +11,7 @@ import 'package:sync_10/game/actors/asteroid_component.dart';
 import 'package:sync_10/game/actors/enemy_component.dart';
 import 'package:sync_10/game/actors/enemy_ship_component.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
+import 'package:sync_10/game/actors/spaceman_component.dart';
 import 'package:sync_10/game/actors/spaceship_component.dart';
 import 'package:sync_10/game/effect_components/blast_effect_component.dart';
 import 'package:sync_10/game/game.dart';
@@ -40,7 +41,8 @@ class Level extends PositionComponent
   final String fileName;
   final Vector2 tileSize;
 
-  late final PositionComponent _rocket;
+  late final PositionComponent _spaceship;
+  late final PositionComponent _spaceman;
 
   static final _random = Random();
   double _elapsedTime = 0;
@@ -86,7 +88,7 @@ class Level extends PositionComponent
                     _random.nextDouble() * spawnArea.size.y,
                   ),
                 );
-            _rocket = SpaceshipComponent(
+            _spaceship = SpaceshipComponent(
               position: randomPosition,
               anchor: Anchor.center,
               scale: Vector2.all(0.3),
@@ -96,7 +98,7 @@ class Level extends PositionComponent
                 ),
               ],
             );
-            await add(_rocket);
+            await add(_spaceship);
             break;
           case 'Syncron':
             final randomPosition =
@@ -255,6 +257,23 @@ class Level extends PositionComponent
             }
 
             break;
+
+          case 'Spaceman':
+            final randomPosition =
+                spawnArea.position..add(
+                  Vector2(
+                    _random.nextDouble() * spawnArea.size.x,
+                    _random.nextDouble() * spawnArea.size.y,
+                  ),
+                );
+            await add(
+              _spaceman = SpacemanComponent(
+                position: randomPosition,
+                anchor: Anchor.center,
+                scale: Vector2.all(0.2),
+              ),
+            );
+            break;
         }
       }
     }
@@ -265,7 +284,7 @@ class Level extends PositionComponent
     super.onMount();
     ancestor.fadeIn();
 
-    ancestor.camera.follow(_rocket);
+    ancestor.camera.follow(_spaceman);
     ancestor.camera.setBounds(
       Rectangle.fromLTWH(
         Gameplay.visibleGameSize.x * 0.5,
@@ -275,7 +294,7 @@ class Level extends PositionComponent
       ),
     );
 
-    ancestor.miniMap.follow(_rocket);
+    ancestor.miniMap.follow(_spaceman);
     ancestor.camera.viewport.add(ancestor.miniMap);
 
     ancestor.miniMap.viewport.position = Vector2(
