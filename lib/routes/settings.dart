@@ -9,6 +9,7 @@ class Settings extends StatelessWidget {
     this.onMusicValueChanged,
     this.onSfxValueChanged,
     this.onBackPressed,
+    this.gamepadSetupPressed,
   });
 
   static const id = 'Settings';
@@ -19,6 +20,7 @@ class Settings extends StatelessWidget {
   final ValueChanged<bool>? onMusicValueChanged;
   final ValueChanged<bool>? onSfxValueChanged;
   final VoidCallback? onBackPressed;
+  final VoidCallback? gamepadSetupPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +60,17 @@ class Settings extends StatelessWidget {
                 child: const Text('Sfx'),
               ),
             ),
+            const SizedBox(height: 5),
+            if (kIsWeb)
+              const SizedBox(height: 5)
+            else
+              SizedBox(
+                width: 200,
+                child: OutlinedButton(
+                  onPressed: gamepadSetupPressed,
+                  child: const Text('Gamepad Setup'),
+                ),
+              ),
             const SizedBox(height: 5),
             IconButton(
               onPressed: onBackPressed,

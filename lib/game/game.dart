@@ -12,14 +12,39 @@ import 'package:flutter/widgets.dart' show KeyEventResult;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sync_10/routes/credits.dart';
 import 'package:sync_10/routes/game_play.dart';
+import 'package:sync_10/routes/gamepad_setup.dart';
 import 'package:sync_10/routes/level_complete.dart';
 import 'package:sync_10/routes/main_menu.dart';
 import 'package:sync_10/routes/pause_menu.dart';
 import 'package:sync_10/routes/retry_menu.dart';
 import 'package:sync_10/routes/settings.dart';
 
+class ActionKeyMap {
+  String? action;
+  String? key;
+
+  double? keyPressedValue;
+  double? keyReleasedValue;
+}
+
 class Sync10Game extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
+  final Map<String, ActionKeyMap> player1Mapping = {
+    'moveUp': ActionKeyMap(),
+    'moveDown': ActionKeyMap(),
+    'boost': ActionKeyMap(),
+    'slowDownTime': ActionKeyMap(),
+  };
+
+  final Map<String, ActionKeyMap> player2Mapping = {
+    'turnLeft': ActionKeyMap(),
+    'turnRight': ActionKeyMap(),
+    'fire': ActionKeyMap(),
+  };
+
+  String? player1GamepadId;
+  String? player2GamepadId;
+
   static const bgm = 'bgm.mp3';
   static const destroySfx = 'destroy.wav';
   static const fireSfx = 'fire.wav';
@@ -47,6 +72,7 @@ class Sync10Game extends FlameGame
         sfxValueListenable: sfxValueNotifier,
         onMusicValueChanged: (value) => musicValueNotifier.value = value,
         onSfxValueChanged: (value) => sfxValueNotifier.value = value,
+        gamepadSetupPressed: () => _routeById(GamepadSetup.id),
         onBackPressed: _popRoute,
       ),
     ),
@@ -59,6 +85,10 @@ class Sync10Game extends FlameGame
         onRestartPressed: _restartLevel,
         onExitPressed: _exitToMainMenu,
       ),
+    ),
+    GamepadSetup.id: OverlayRoute(
+      (context, game) =>
+          GamepadSetup(game: game as Sync10Game, onBackPressed: _popRoute),
     ),
   };
 

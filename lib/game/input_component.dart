@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
+import 'package:sync_10/game/game.dart';
 
 class InputComponent extends Component with KeyboardHandler {
   InputComponent({Map<LogicalKeyboardKey, VoidCallback>? keyCallbacks})
@@ -75,93 +76,41 @@ class InputComponent extends Component with KeyboardHandler {
   }
 }
 
-class GamepadComponenet extends InputComponent {
+class GamepadComponenet extends InputComponent
+    with HasGameReference<Sync10Game> {
   GamepadComponenet({super.keyCallbacks});
-
-  final _gamepadID1 = Platform.isLinux ? '/dev/input/js0' : '0';
-  final _gamepadID2 = Platform.isLinux ? '/dev/input/js1' : '1';
-
-  final _dPad = 'pov';
-  final _dPadVAxis = '7';
-  final _dPadHAxis = '6';
-
-  final _buttonA = Platform.isLinux ? '0' : 'button-0';
-
-  final _buttonPressed = 1.0;
-  final _buttonReleased = 0.0;
-
-  final _upValue = Platform.isLinux ? -32767.0 : 0.0;
-  final _downValue = Platform.isLinux ? 32767.0 : 18000.0;
-  final _rightValue = Platform.isLinux ? 32767.0 : 9000.0;
-  final _leftValue = Platform.isLinux ? -32767.0 : 27000.0;
-  final _neutralValue = Platform.isLinux ? 0.0 : 65535.0;
 
   @override
   Future<void> onLoad() async {
-    Gamepads.events.listen(_onGamepadEvent);
-    Gamepads.eventsByGamepad(_gamepadID1).listen(_onGamepad1Event);
-    Gamepads.eventsByGamepad(_gamepadID2).listen(_onGamepad2Event);
+    Gamepads.eventsByGamepad(game.player1GamepadId!).listen(_onGamepad1Event);
+    Gamepads.eventsByGamepad(game.player2GamepadId!).listen(_onGamepad2Event);
   }
 
   void _onGamepad1Event(GamepadEvent event) {
-    if (event.type == KeyType.analog) {
-      if (event.key == (Platform.isLinux ? _dPadVAxis : _dPad)) {
-        if (event.value == _upValue) {
-          _up = true;
-          _down = false;
-        } else if (event.value == _downValue) {
-          _up = false;
-          _down = true;
-        } else if (event.value == _neutralValue) {
-          _up = false;
-          _down = false;
-        }
-      }
+    if (event.key == game.player1Mapping['moveUp']?.key) {
+      _up = event.value == game.player1Mapping['moveUp']?.keyPressedValue;
     }
-
-    if (event.type == KeyType.button) {
-      if (event.key == _buttonA) {
-        if (event.value == _buttonPressed) {
-          _slowDown = true;
-        } else if (event.value == _buttonReleased) {
-          _slowDown = false;
-        }
-      }
+    if (event.key == game.player1Mapping['moveDown']?.key) {
+      _down = event.value == game.player1Mapping['moveDown']?.keyPressedValue;
+    }
+    if (event.key == game.player1Mapping['boost']?.key) {
+      _boost = event.value == game.player1Mapping['boost']?.keyPressedValue;
+    }
+    if (event.key == game.player1Mapping['slowDownTime']?.key) {
+      _slowDown =
+          event.value == game.player1Mapping['slowDownTime']?.keyPressedValue;
     }
   }
 
   void _onGamepad2Event(GamepadEvent event) {
-    if (event.type == KeyType.analog) {
-      if (event.key == (Platform.isLinux ? _dPadHAxis : _dPad)) {
-        if (event.value == _rightValue) {
-          _right = true;
-          _left = false;
-        } else if (event.value == _leftValue) {
-          _right = false;
-          _left = true;
-        } else if (event.value == _neutralValue) {
-          _right = false;
-          _left = false;
-        }
-      }
+    if (event.key == game.player2Mapping['turnLeft']?.key) {
+      _left = event.value == game.player2Mapping['turnLeft']?.keyPressedValue;
     }
-
-    if (event.type == KeyType.button) {
-      if (event.key == _buttonA) {
-        if (event.value == _buttonPressed) {
-          _boost = true;
-        } else if (event.value == _buttonReleased) {
-          _boost = false;
-        }
-      }
+    if (event.key == game.player2Mapping['turnRight']?.key) {
+      _right = event.value == game.player2Mapping['turnRight']?.keyPressedValue;
     }
-  }
-
-  void _onGamepadEvent(GamepadEvent event) {
-    // ignore: avoid_print
-    print(
-      // ignore: lines_longer_than_80_chars
-      'ID: ${event.gamepadId} Type: ${event.type}, Key: ${event.key}, Value: ${event.value}',
-    );
+    if (event.key == game.player2Mapping['fire']?.key) {
+      _fire = event.value == game.player2Mapping['fire']?.keyPressedValue;
+    }
   }
 }
