@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sync_10/game/actors/bullet_component.dart';
 import 'package:sync_10/game/actors/enemy_component.dart';
 import 'package:sync_10/game/actors/player_detector.dart';
+import 'package:sync_10/game/effect_components/blast_effect_component.dart';
 import 'package:sync_10/game/level.dart';
 
 class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
@@ -147,6 +148,10 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
         );
       }
 
+      parent.add(
+        BlastEffectComponent(position: position, scale: Vector2.all(0.4)),
+      );
+
       add(
         ScaleEffect.to(
           Vector2.zero(),
@@ -188,6 +193,10 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
           ),
         );
       }
+
+      parent.add(
+        BlastEffectComponent(position: position, scale: Vector2.all(0.4)),
+      );
 
       add(
         ScaleEffect.to(

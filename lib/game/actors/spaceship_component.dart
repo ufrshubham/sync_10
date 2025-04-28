@@ -9,12 +9,12 @@ import 'package:sync_10/game/actors/enemy_component.dart';
 import 'package:sync_10/game/actors/enemy_ship_component.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/game/actors/player_detector.dart';
-import 'package:sync_10/game/hit_effect_component.dart';
+import 'package:sync_10/game/effect_components/hit_effect_component.dart';
 import 'package:sync_10/game/level.dart';
-import 'package:sync_10/game/pickups/energy_pickup_component.dart';
-import 'package:sync_10/game/pickups/fuel_pickup_component.dart';
-import 'package:sync_10/game/pickups/health_pickup_component.dart';
-import 'package:sync_10/game/pickups/syncron_pickup_component.dart';
+import 'package:sync_10/game/pickup_components/energy_pickup_component.dart';
+import 'package:sync_10/game/pickup_components/fuel_pickup_component.dart';
+import 'package:sync_10/game/pickup_components/health_pickup_component.dart';
+import 'package:sync_10/game/pickup_components/syncron_pickup_component.dart';
 import 'package:sync_10/routes/game_play.dart';
 
 enum _FlameSprites { flameNormal, flameBoost }

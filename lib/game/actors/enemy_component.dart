@@ -9,6 +9,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sync_10/game/actors/bullet_component.dart';
 import 'package:sync_10/game/actors/player_detector.dart';
+import 'package:sync_10/game/effect_components/blast_effect_component.dart';
 import 'package:sync_10/game/level.dart';
 
 class EnemyComponent extends PositionComponent with ParentIsA<Level> {
@@ -137,6 +138,10 @@ class EnemyComponent extends PositionComponent with ParentIsA<Level> {
   void takeBulletHit(double damage) {
     _health = clampDouble(_health - damage, 0, 30);
     if (_health == 0) {
+      parent.add(
+        BlastEffectComponent(position: position, scale: Vector2.all(0.4)),
+      );
+
       add(
         ScaleEffect.to(
           Vector2.zero(),
@@ -163,6 +168,10 @@ class EnemyComponent extends PositionComponent with ParentIsA<Level> {
   void takeDamage(double damage) {
     _health = clampDouble(_health - damage, 0, 30);
     if (_health == 0) {
+      parent.add(
+        BlastEffectComponent(position: position, scale: Vector2.all(0.4)),
+      );
+
       add(
         ScaleEffect.to(
           Vector2.zero(),

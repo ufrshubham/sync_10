@@ -5,6 +5,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
+import 'package:sync_10/game/effect_components/blast_effect_component.dart';
 import 'package:sync_10/game/level.dart';
 import 'package:sync_10/routes/game_play.dart';
 
@@ -96,6 +97,9 @@ class AsteroidComponent extends PositionComponent
     if (_asteroid.current == _AsteroidDamage.normal) {
       _asteroid.current = _AsteroidDamage.damaged;
     } else {
+      parent.add(
+        BlastEffectComponent(position: position, scale: Vector2.all(0.4)),
+      );
       removeFromParent();
     }
   }

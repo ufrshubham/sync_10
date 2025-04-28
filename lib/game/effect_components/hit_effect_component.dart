@@ -24,6 +24,10 @@ class HitEffectComponent extends PositionComponent {
             curve: Curves.easeInOut,
             repeatCount: 2,
           ),
+        ),
+        OpacityEffect.to(
+          0,
+          EffectController(duration: 0.5, curve: Curves.easeOut),
           onComplete: removeFromParent,
         ),
       ],
