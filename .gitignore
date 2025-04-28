@@ -57,3 +57,4 @@ secrets.txt
 run-windows.bat
 build-windows.bat
 build-web.bat
+generate-icons.bat

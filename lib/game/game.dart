@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show KeyEvent;
 import 'package:flutter/services.dart' show KeyDownEvent, LogicalKeyboardKey;
@@ -19,6 +20,11 @@ import 'package:sync_10/routes/settings.dart';
 
 class Sync10Game extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
+  static const bgm = 'bgm.mp3';
+  // static const jumpSfx = 'Jump.wav';
+  // static const collectSfx = 'Collect.wav';
+  // static const hurtSfx = 'Hurt.wav';
+
   final sfxValueNotifier = ValueNotifier(true);
   final musicValueNotifier = ValueNotifier(true);
 
@@ -84,6 +90,8 @@ class Sync10Game extends FlameGame
   Future<void> onLoad() async {
     await add(_router);
     client = Supabase.instance.client;
+
+    FlameAudio.audioCache.loadAll([bgm]);
   }
 
   @override

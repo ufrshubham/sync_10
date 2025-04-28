@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -92,8 +95,17 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
             },
           );
 
+  AudioPlayer? _bgmPlayer;
+  static const _bgmFadeRate = 1;
+  static const _bgmMinVol = 0;
+  static const _bgmMaxVol = 0.6;
+
   @override
   Future<void> onLoad() async {
+    if (game.musicValueNotifier.value) {
+      _bgmPlayer = await FlameAudio.loopLongAudio(Sync10Game.bgm, volume: 0);
+    }
+
     //bool seeDebug = true;
     final camera = cameras[CameraType.primary]!;
     camera.moveTo(visibleGameSize * 0.5);
@@ -173,6 +185,23 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
   @override
   void update(double dt) {
     super.update(dt);
+
+    if (_bgmPlayer != null) {
+      if (isLevelCompleted) {
+        if (_bgmPlayer!.volume > _bgmMinVol) {
+          _bgmPlayer!.setVolume(
+            lerpDouble(_bgmPlayer!.volume, _bgmMinVol, _bgmFadeRate * dt)!,
+          );
+        }
+      } else {
+        if (_bgmPlayer!.volume < _bgmMaxVol) {
+          _bgmPlayer!.setVolume(
+            lerpDouble(_bgmPlayer!.volume, _bgmMaxVol, _bgmFadeRate * dt)!,
+          );
+        }
+      }
+    }
+
     if (isLevelCompleted) {
       if (_isSwitchingLevels == false) {
         _isSwitchingLevels = true;
@@ -194,5 +223,11 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
         });
       }
     }
+  }
+
+  @override
+  void onRemove() {
+    _bgmPlayer?.dispose();
+    super.onRemove();
   }
 }
