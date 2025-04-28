@@ -1,9 +1,9 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flutter/material.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/routes/game_play.dart';
 
@@ -24,6 +24,8 @@ class SyncronPickupComponent extends PositionComponent
   final Vector2 _scale;
 
   double get syncronValue => 40.0;
+
+  late final CircleHitbox _hitbox;
 
   @override
   Future<void> onLoad() async {
@@ -51,7 +53,7 @@ class SyncronPickupComponent extends PositionComponent
 
     await add(syncronSprite);
     await add(
-      CircleHitbox(
+      _hitbox = CircleHitbox(
         radius: syncronSprite.size.x * 0.5 * _scale.x * 0.9,
         anchor: Anchor.center,
         isSolid: true,
@@ -82,5 +84,18 @@ class SyncronPickupComponent extends PositionComponent
     }
 
     super.onCollisionStart(intersectionPoints, other);
+  }
+
+  void onPick() {
+    if (_hitbox.collisionType != CollisionType.inactive) {
+      _hitbox.collisionType = CollisionType.inactive;
+      add(
+        ScaleEffect.to(
+          Vector2.zero(),
+          EffectController(duration: 0.2, curve: Curves.easeInOut),
+          onComplete: removeFromParent,
+        ),
+      );
+    }
   }
 }

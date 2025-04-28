@@ -262,7 +262,7 @@ class SpaceshipComponent extends PositionComponent
       }
       other.shake(_moveDirection);
     } else if (other is SyncronPickupComponent) {
-      other.removeFromParent();
+      other.onPick();
       _syncronCollected++;
       ancestor.updateSyncronCount(_syncronCollected);
 
@@ -275,15 +275,15 @@ class SpaceshipComponent extends PositionComponent
       _energy = clampDouble(_energy + other.syncronValue, 0, 100);
       ancestor.updateEnergyBar(_energy, increase: true);
     } else if (other is HealthPickupComponent) {
-      other.removeFromParent();
+      other.onPick();
       _health = clampDouble(_health + other.healthValue, 0, 100);
       ancestor.updateHealthBar(_health, increase: true);
     } else if (other is FuelPickupComponent) {
-      other.removeFromParent();
+      other.onPick();
       _fuel = clampDouble(_fuel + other.fuelValue, 0, 100);
       ancestor.updateFuelBar(_fuel, increase: true);
     } else if (other is EnergyPickupComponent) {
-      other.removeFromParent();
+      other.onPick();
       _energy = clampDouble(_energy + other.energyValue, 0, 100);
       ancestor.updateEnergyBar(_energy, increase: true);
     } else if (other is PlayerDetector) {

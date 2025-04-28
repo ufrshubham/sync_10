@@ -18,6 +18,8 @@ class HealthPickupComponent extends PositionComponent
   double get healthValue => 20.0;
   final Vector2 _scale;
 
+  late final CircleHitbox _hitbox;
+
   @override
   Future<void> onLoad() async {
     final glassSprite = SpriteComponent(
@@ -44,7 +46,7 @@ class HealthPickupComponent extends PositionComponent
 
     await addAll([healthSprite, glassSprite]);
     await add(
-      CircleHitbox(
+      _hitbox = CircleHitbox(
         radius: glassSprite.size.x * 0.5 * _scale.x * 0.9,
         anchor: Anchor.center,
         collisionType: CollisionType.passive,
@@ -62,6 +64,19 @@ class HealthPickupComponent extends PositionComponent
         Offset(position.x, position.y),
         20,
         Paint()..color = const Color.fromARGB(255, 225, 69, 69),
+      );
+    }
+  }
+
+  void onPick() {
+    if (_hitbox.collisionType != CollisionType.inactive) {
+      _hitbox.collisionType = CollisionType.inactive;
+      add(
+        ScaleEffect.to(
+          Vector2.zero(),
+          EffectController(duration: 0.2, curve: Curves.easeInOut),
+          onComplete: removeFromParent,
+        ),
       );
     }
   }

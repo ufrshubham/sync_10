@@ -17,6 +17,8 @@ class FuelPickupComponent extends PositionComponent with HasAncestor<Gameplay> {
   double get fuelValue => 15.0;
   final Vector2 _scale;
 
+  late final CircleHitbox _hitbox;
+
   @override
   Future<void> onLoad() async {
     final glassSprite = SpriteComponent(
@@ -43,7 +45,7 @@ class FuelPickupComponent extends PositionComponent with HasAncestor<Gameplay> {
 
     await addAll([fuelSprite, glassSprite]);
     await add(
-      CircleHitbox(
+      _hitbox = CircleHitbox(
         radius: glassSprite.size.x * 0.5 * _scale.x * 0.9,
         anchor: Anchor.center,
         collisionType: CollisionType.passive,
@@ -61,6 +63,19 @@ class FuelPickupComponent extends PositionComponent with HasAncestor<Gameplay> {
         Offset(position.x, position.y),
         20,
         Paint()..color = const Color.fromARGB(255, 68, 168, 225),
+      );
+    }
+  }
+
+  void onPick() {
+    if (_hitbox.collisionType != CollisionType.inactive) {
+      _hitbox.collisionType = CollisionType.inactive;
+      add(
+        ScaleEffect.to(
+          Vector2.zero(),
+          EffectController(duration: 0.2, curve: Curves.easeInOut),
+          onComplete: removeFromParent,
+        ),
       );
     }
   }
