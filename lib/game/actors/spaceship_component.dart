@@ -480,11 +480,11 @@ class SpaceshipComponent extends PositionComponent
       if (_fuel == 0) {
         _isGameOver = true;
         ancestor.input.isListening = false;
-        ancestor.fadeOut().then((_) => ancestor.onGameOver());
+        ancestor.fadeOut().then((_) => ancestor.onGameOver('fuel'));
       } else if (_health == 0) {
         _isGameOver = true;
         ancestor.input.isListening = false;
-        ancestor.fadeOut().then((_) => ancestor.onGameOver());
+        ancestor.fadeOut().then((_) => ancestor.onGameOver('health'));
       }
     }
   }

@@ -60,12 +60,6 @@ class Sync10Game extends FlameGame
         onExitPressed: _exitToMainMenu,
       ),
     ),
-    RetryMenu.id: OverlayRoute(
-      (context, game) => RetryMenu(
-        onRetryPressed: _restartLevel,
-        onExitPressed: _exitToMainMenu,
-      ),
-    ),
   };
 
   late final _routeFactories = <String, Route Function(String)>{
@@ -74,6 +68,14 @@ class Sync10Game extends FlameGame
           (context, game) => LevelComplete(
             levelTime: int.parse(argument),
             onSubmitPressed: _onSubmitPressed,
+            onRetryPressed: _restartLevel,
+            onExitPressed: _exitToMainMenu,
+          ),
+        ),
+    RetryMenu.id:
+        (argument) => OverlayRoute(
+          (context, game) => RetryMenu(
+            reason: argument,
             onRetryPressed: _restartLevel,
             onExitPressed: _exitToMainMenu,
           ),
@@ -179,12 +181,12 @@ class Sync10Game extends FlameGame
     _router.pushNamed('${LevelComplete.id}/$levelTime');
   }
 
-  void _showRetryMenu() {
+  void _showRetryMenu(String reason) {
     if (sfxValueNotifier.value) {
       FlameAudio.play(Sync10Game.gameoverSfx);
     }
     pauseEngine();
-    _router.pushNamed(RetryMenu.id);
+    _router.pushNamed('${RetryMenu.id}/$reason');
   }
 
   Future<bool> _onSubmitPressed(String duoName, int time) async {

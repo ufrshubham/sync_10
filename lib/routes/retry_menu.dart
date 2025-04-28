@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
 class RetryMenu extends StatelessWidget {
-  const RetryMenu({super.key, this.onRetryPressed, this.onExitPressed});
+  const RetryMenu({
+    required this.reason,
+    super.key,
+    this.onRetryPressed,
+    this.onExitPressed,
+  });
 
   static const id = 'RetryMenu';
 
   final VoidCallback? onRetryPressed;
   final VoidCallback? onExitPressed;
+
+  final String reason;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +24,11 @@ class RetryMenu extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text('Game Over', style: TextStyle(fontSize: 30)),
+            const SizedBox(height: 15),
+            Text(
+              'You ran out of $reason',
+              style: const TextStyle(fontSize: 20),
+            ),
             const SizedBox(height: 15),
             SizedBox(
               width: 150,

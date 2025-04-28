@@ -33,7 +33,7 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
 
   final VoidCallback onPausePressed;
   final ValueChanged<int> onLevelCompleted;
-  final VoidCallback onGameOver;
+  final ValueChanged<String> onGameOver;
 
   late final Level _level;
   bool isLevelCompleted = false;
@@ -83,15 +83,15 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
           ? InputComponent(
             keyCallbacks: {
               LogicalKeyboardKey.keyP: onPausePressed,
-              LogicalKeyboardKey.keyC: () => updateSyncronCount(8),
-              LogicalKeyboardKey.keyG: onGameOver,
+              // LogicalKeyboardKey.keyC: () => updateSyncronCount(8),
+              // LogicalKeyboardKey.keyG: onGameOver,
             },
           )
           : GamepadComponenet(
             keyCallbacks: {
               LogicalKeyboardKey.keyP: onPausePressed,
-              LogicalKeyboardKey.keyC: () => updateSyncronCount(8),
-              LogicalKeyboardKey.keyG: onGameOver,
+              // LogicalKeyboardKey.keyC: () => updateSyncronCount(8),
+              // LogicalKeyboardKey.keyG: onGameOver,
             },
           );
 
