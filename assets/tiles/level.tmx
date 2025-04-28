@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="70">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="78">
  <layer id="1" name="Background" width="200" height="200">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -261,5 +261,13 @@
   <object id="67" name="Asteroid" type="Asteroid" x="0" y="3040" width="3200" height="160"/>
   <object id="68" name="Asteroid" type="Asteroid" x="0" y="160" width="160" height="2880"/>
   <object id="69" name="Asteroid" type="Asteroid" x="3040" y="160" width="160" height="2880"/>
+  <object id="70" name="Enemy" type="Enemy" x="192" y="192" width="832" height="704"/>
+  <object id="71" name="Enemy" type="Enemy" x="1168" y="80" width="672" height="544"/>
+  <object id="72" name="Enemy" type="Enemy" x="2048" y="384" width="992" height="720"/>
+  <object id="73" name="Enemy" type="Enemy" x="2128" y="1264" width="944" height="736"/>
+  <object id="74" name="Enemy" type="Enemy" x="1776" y="2240" width="944" height="736"/>
+  <object id="75" name="Enemy" type="Enemy" x="800" y="2416" width="896" height="688"/>
+  <object id="76" name="Enemy" type="Enemy" x="176" y="1984" width="736" height="688"/>
+  <object id="77" name="Enemy" type="Enemy" x="192" y="976" width="1056" height="848"/>
  </objectgroup>
 </map>

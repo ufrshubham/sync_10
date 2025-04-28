@@ -4,16 +4,21 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:sync_10/game/actors/asteroid_component.dart';
+import 'package:sync_10/game/actors/enemy_ship_component.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/game/level.dart';
 
 class BulletComponent extends PositionComponent
     with ParentIsA<Level>, CollisionCallbacks {
-  BulletComponent({required super.position, required Vector2 direction})
-    : _direction = direction.clone();
+  BulletComponent({
+    required this.damage,
+    required super.position,
+    required Vector2 direction,
+  }) : _direction = direction.clone();
 
   final double _speed = 500.0;
   final Vector2 _direction;
+  final double damage;
 
   @override
   Future<void> onLoad() async {
@@ -62,6 +67,10 @@ class BulletComponent extends PositionComponent
       removeFromParent();
     }
     if (other is BulletComponent || other is PlanetComponent) {
+      removeFromParent();
+    }
+    if (other is EnemyShipComponent) {
+      other.takeBulletHit(damage);
       removeFromParent();
     }
     super.onCollisionStart(intersectionPoints, other);

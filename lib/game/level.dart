@@ -7,6 +7,7 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:sync_10/game/actors/asteroid_component.dart';
+import 'package:sync_10/game/actors/enemy_ship_component.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/game/actors/spaceship_component.dart';
 import 'package:sync_10/game/game.dart';
@@ -226,6 +227,30 @@ class Level extends PositionComponent
             );
 
             await add(asteroidSpawner);
+            break;
+
+          case 'Enemy':
+            for (var i = 0; i < 5; ++i) {
+              final randomPosition =
+                  spawnArea.position..add(
+                    Vector2(
+                      _random.nextDouble() * spawnArea.size.x,
+                      _random.nextDouble() * spawnArea.size.y,
+                    ),
+                  );
+              final enemy = EnemyShipComponent(
+                patrolArea: Rectangle.fromLTWH(
+                  spawnArea.position.x,
+                  spawnArea.position.y,
+                  spawnArea.size.x,
+                  spawnArea.size.y,
+                ),
+                position: randomPosition,
+                scale: Vector2.all(0.5),
+              );
+              await add(enemy);
+            }
+
             break;
         }
       }

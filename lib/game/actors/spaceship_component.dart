@@ -5,6 +5,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:sync_10/game/actors/asteroid_component.dart';
 import 'package:sync_10/game/actors/bullet_component.dart';
+import 'package:sync_10/game/actors/enemy_ship_component.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/game/hit_effect_component.dart';
 import 'package:sync_10/game/level.dart';
@@ -60,6 +61,7 @@ class SpaceshipComponent extends PositionComponent
   static const _energyConsumptionFire = 1.0;
   static const _energyConsumptionSlowDown = 15;
   static const _initialShieldTime = 1.0;
+  static const _bulletDamage = 40.0;
 
   double get health => _health;
 
@@ -238,6 +240,17 @@ class SpaceshipComponent extends PositionComponent
       other.removeFromParent();
       _energy = clampDouble(_energy + other.energyValue, 0, 100);
       ancestor.updateEnergyBar(_energy, increase: true);
+    } else if (other is PlayerDetector) {
+      other.onPlayerEntered?.call(this);
+    }
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+
+    if (other is PlayerDetector) {
+      other.onPlayerExited?.call(this);
     }
   }
 
@@ -370,6 +383,7 @@ class SpaceshipComponent extends PositionComponent
 
     if (ancestor.input.fire && _timeSinceLastFire >= _fireDelay) {
       final bullet = BulletComponent(
+        damage: _bulletDamage,
         position: position - _moveDirection * (_spaceShipSprite.height / 2),
         direction: -_moveDirection,
       );
