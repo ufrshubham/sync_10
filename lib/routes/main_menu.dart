@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
 class MainMenu extends StatelessWidget {
-  const MainMenu({super.key, this.onPlayPressed, this.onSettingsPressed});
+  const MainMenu({
+    super.key,
+    this.onPlayPressed,
+    this.onSettingsPressed,
+    this.onCreditsPressed,
+  });
 
   static const id = 'MainMenu';
 
   final VoidCallback? onPlayPressed;
   final VoidCallback? onSettingsPressed;
+  final VoidCallback? onCreditsPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +36,14 @@ class MainMenu extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: onSettingsPressed,
                 child: const Text('Settings'),
+              ),
+            ),
+            const SizedBox(height: 5),
+            SizedBox(
+              width: 150,
+              child: OutlinedButton(
+                onPressed: onCreditsPressed,
+                child: const Text('Credits'),
               ),
             ),
           ],

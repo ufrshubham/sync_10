@@ -9,6 +9,7 @@ import 'package:flutter/material.dart' show KeyEvent;
 import 'package:flutter/services.dart' show KeyDownEvent, LogicalKeyboardKey;
 import 'package:flutter/widgets.dart' show KeyEventResult;
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sync_10/routes/credits.dart';
 import 'package:sync_10/routes/game_play.dart';
 import 'package:sync_10/routes/level_complete.dart';
 import 'package:sync_10/routes/main_menu.dart';
@@ -28,6 +29,7 @@ class Sync10Game extends FlameGame
       (context, game) => MainMenu(
         onPlayPressed: () => _startLevel(0),
         onSettingsPressed: () => _routeById(Settings.id),
+        onCreditsPressed: () => _routeById(Credits.id),
       ),
     ),
     Settings.id: OverlayRoute(
@@ -38,6 +40,9 @@ class Sync10Game extends FlameGame
         onSfxValueChanged: (value) => sfxValueNotifier.value = value,
         onBackPressed: _popRoute,
       ),
+    ),
+    Credits.id: OverlayRoute(
+      (context, game) => Credits(onBackPressed: _popRoute),
     ),
     PauseMenu.id: OverlayRoute(
       (context, game) => PauseMenu(
