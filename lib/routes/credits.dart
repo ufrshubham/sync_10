@@ -29,7 +29,7 @@ class Credits extends StatelessWidget {
             GestureDetector(
               onTap: () => _launchUrl('https://ufrshubham.itch.io/'),
               child: const Text(
-                'Programming: DevKage (Shubham)',
+                'Programming: DevKage',
                 style: TextStyle(fontSize: 18, color: Colors.blue),
               ),
             ),
@@ -37,7 +37,7 @@ class Credits extends StatelessWidget {
             GestureDetector(
               onTap: () => _launchUrl('https://respawnedplayer.itch.io/'),
               child: const Text(
-                'Art: RespawnedPlayer (Shivangi)',
+                'Art: RespawnedPlayer',
                 style: TextStyle(fontSize: 18, color: Colors.blue),
               ),
             ),
@@ -45,7 +45,7 @@ class Credits extends StatelessWidget {
             GestureDetector(
               onTap: () => _launchUrl('https://ufrshubham.itch.io/'),
               child: const Text(
-                'Music: DevKage (Shubham)',
+                'Music: DevKage',
                 style: TextStyle(fontSize: 18, color: Colors.blue),
               ),
             ),

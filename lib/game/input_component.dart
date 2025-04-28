@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
@@ -82,8 +80,10 @@ class GamepadComponenet extends InputComponent
 
   @override
   Future<void> onLoad() async {
-    Gamepads.eventsByGamepad(game.player1GamepadId!).listen(_onGamepad1Event);
-    Gamepads.eventsByGamepad(game.player2GamepadId!).listen(_onGamepad2Event);
+    if (game.player1GamepadId != null && game.player2GamepadId != null) {
+      Gamepads.eventsByGamepad(game.player1GamepadId!).listen(_onGamepad1Event);
+      Gamepads.eventsByGamepad(game.player2GamepadId!).listen(_onGamepad2Event);
+    }
   }
 
   void _onGamepad1Event(GamepadEvent event) {

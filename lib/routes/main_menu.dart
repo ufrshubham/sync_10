@@ -5,6 +5,7 @@ class MainMenu extends StatelessWidget {
     super.key,
     this.onPlayPressed,
     this.onSettingsPressed,
+    this.onLeaderboardPressed,
     this.onCreditsPressed,
   });
 
@@ -12,6 +13,7 @@ class MainMenu extends StatelessWidget {
 
   final VoidCallback? onPlayPressed;
   final VoidCallback? onSettingsPressed;
+  final VoidCallback? onLeaderboardPressed;
   final VoidCallback? onCreditsPressed;
 
   @override
@@ -36,6 +38,14 @@ class MainMenu extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: onSettingsPressed,
                 child: const Text('Settings'),
+              ),
+            ),
+            const SizedBox(height: 5),
+            SizedBox(
+              width: 150,
+              child: OutlinedButton(
+                onPressed: onLeaderboardPressed,
+                child: const Text('Leaderboard'),
               ),
             ),
             const SizedBox(height: 5),

@@ -13,6 +13,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sync_10/routes/credits.dart';
 import 'package:sync_10/routes/game_play.dart';
 import 'package:sync_10/routes/gamepad_setup.dart';
+import 'package:sync_10/routes/leaderboard.dart';
 import 'package:sync_10/routes/level_complete.dart';
 import 'package:sync_10/routes/main_menu.dart';
 import 'package:sync_10/routes/pause_menu.dart';
@@ -63,6 +64,7 @@ class Sync10Game extends FlameGame
       (context, game) => MainMenu(
         onPlayPressed: () => _startLevel(0),
         onSettingsPressed: () => _routeById(Settings.id),
+        onLeaderboardPressed: () => _routeById(Leaderboard.id),
         onCreditsPressed: () => _routeById(Credits.id),
       ),
     ),
@@ -89,6 +91,9 @@ class Sync10Game extends FlameGame
     GamepadSetup.id: OverlayRoute(
       (context, game) =>
           GamepadSetup(game: game as Sync10Game, onBackPressed: _popRoute),
+    ),
+    Leaderboard.id: OverlayRoute(
+      (context, game) => Leaderboard(onBackPressed: _popRoute),
     ),
   };
 

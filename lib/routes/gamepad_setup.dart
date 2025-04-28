@@ -31,6 +31,7 @@ class _GamepadSetupState extends State<GamepadSetup> {
           }
         }
       });
+      // ignore: require_trailing_commas
     }, onDone: stream.drain);
   }
 
@@ -69,6 +70,7 @@ class _GamepadSetupState extends State<GamepadSetup> {
         }
       });
       count++;
+      // ignore: require_trailing_commas
     }, onDone: stream.drain);
   }
 
@@ -94,13 +96,16 @@ class _GamepadSetupState extends State<GamepadSetup> {
               ),
               const SizedBox(height: 10),
               ...widget.game.player1Mapping.keys.map((action) {
+                final isMapped =
+                    widget.game.player1Mapping[action]!.key != null;
                 return ListTile(
                   title: Text('Map $action'),
                   subtitle: Text(
-                    widget.game.player1Mapping[action]!.key == null
-                        ? 'Not Mapped'
-                        : '''Mapped to: ${widget.game.player1Mapping[action]?.key}, Pressed Value: ${widget.game.player1Mapping[action]?.keyPressedValue}, Released Value: ${widget.game.player1Mapping[action]?.keyReleasedValue}''',
+                    isMapped
+                        ? '''Mapped to: ${widget.game.player1Mapping[action]?.key}, Pressed Value: ${widget.game.player1Mapping[action]?.keyPressedValue}, Released Value: ${widget.game.player1Mapping[action]?.keyReleasedValue}'''
+                        : 'Not Mapped',
                   ),
+                  tileColor: isMapped ? Colors.green[100] : null,
                   trailing: ElevatedButton(
                     onPressed: () => _mapAction(1, action),
                     child: const Text('Map'),
@@ -120,13 +125,16 @@ class _GamepadSetupState extends State<GamepadSetup> {
               ),
               const SizedBox(height: 10),
               ...widget.game.player2Mapping.keys.map((action) {
+                final isMapped =
+                    widget.game.player2Mapping[action]!.key != null;
                 return ListTile(
                   title: Text('Map $action'),
                   subtitle: Text(
-                    widget.game.player2Mapping[action]!.key == null
-                        ? 'Not Mapped'
-                        : '''Mapped to: ${widget.game.player2Mapping[action]?.key}, Pressed Value: ${widget.game.player2Mapping[action]?.keyPressedValue}, Released Value: ${widget.game.player2Mapping[action]?.keyReleasedValue}''',
+                    isMapped
+                        ? '''Mapped to: ${widget.game.player2Mapping[action]?.key}, Pressed Value: ${widget.game.player2Mapping[action]?.keyPressedValue}, Released Value: ${widget.game.player2Mapping[action]?.keyReleasedValue}'''
+                        : 'Not Mapped',
                   ),
+                  tileColor: isMapped ? Colors.green[100] : null,
                   trailing: ElevatedButton(
                     onPressed: () => _mapAction(2, action),
                     child: const Text('Map'),
