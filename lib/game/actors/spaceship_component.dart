@@ -242,6 +242,10 @@ class SpaceshipComponent extends PositionComponent
       ancestor.updateEnergyBar(_energy, increase: true);
     } else if (other is PlayerDetector) {
       other.onPlayerEntered?.call(this);
+    } else if (other is BulletComponent && other.owner != this) {
+      _health = clampDouble(_health - other.damage, 0, 100);
+      ancestor.updateHealthBar(_health);
+      other.removeFromParent();
     }
   }
 
@@ -383,6 +387,7 @@ class SpaceshipComponent extends PositionComponent
 
     if (ancestor.input.fire && _timeSinceLastFire >= _fireDelay) {
       final bullet = BulletComponent(
+        owner: this,
         damage: _bulletDamage,
         position: position - _moveDirection * (_spaceShipSprite.height / 2),
         direction: -_moveDirection,

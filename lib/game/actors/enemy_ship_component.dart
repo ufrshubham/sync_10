@@ -7,8 +7,10 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:sync_10/game/actors/bullet_component.dart';
+import 'package:sync_10/game/level.dart';
 
-class EnemyShipComponent extends PositionComponent {
+class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
   EnemyShipComponent({required this.patrolArea, Vector2? scale, super.position})
     : _scale = scale ?? Vector2(1, 1);
 
@@ -25,6 +27,11 @@ class EnemyShipComponent extends PositionComponent {
   final _randomPosition = Vector2(0, 0);
   var _isPatroling = false;
   MoveEffect? _moveEffect;
+
+  var _timeSinceLastFire = 0.0;
+
+  static const _fireDelay = 2;
+  static const _bulletDamage = 5.0;
 
   @override
   Future<void> onLoad() async {
@@ -72,13 +79,28 @@ class EnemyShipComponent extends PositionComponent {
       _isPatroling = false;
       final targetPosition = target!.absoluteCenter;
       final relativeVector = targetPosition - absoluteCenter;
+      final direction = relativeVector.normalized();
+
       if (relativeVector.length < _spaceshipSprite.size.x * _scale.x + 5) {
         _moveDirection.setZero();
       } else {
-        final direction = relativeVector.normalized();
         _moveDirection.setFrom(direction);
       }
       position.add(_moveDirection * speed * dt);
+
+      _timeSinceLastFire += dt;
+      if (_timeSinceLastFire > _fireDelay) {
+        _timeSinceLastFire = 0;
+
+        final bullet = BulletComponent(
+          owner: this,
+          position:
+              absolutePosition + direction * _spaceshipSprite.size.x * 0.4,
+          direction: direction,
+          damage: _bulletDamage,
+        );
+        parent.add(bullet);
+      }
     } else {
       if (!_isPatroling) {
         _isPatroling = true;
