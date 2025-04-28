@@ -8,22 +8,21 @@ import 'package:flame/experimental.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sync_10/game/actors/bullet_component.dart';
-import 'package:sync_10/game/actors/enemy_component.dart';
 import 'package:sync_10/game/actors/player_detector.dart';
 import 'package:sync_10/game/level.dart';
 
-class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
-  EnemyShipComponent({required this.patrolArea, Vector2? scale, super.position})
+class EnemyComponent extends PositionComponent with ParentIsA<Level> {
+  EnemyComponent({required this.patrolArea, Vector2? scale, super.position})
     : _scale = scale ?? Vector2.all(1);
 
-  final double speed = 60.0;
+  final double speed = 40.0;
   final Vector2 _scale;
   final Rectangle patrolArea;
   PositionComponent? target;
 
-  late final SpriteComponent _spaceshipSprite;
+  late final SpriteAnimationComponent _enemySprite;
 
-  var _health = 100.0;
+  var _health = 30.0;
   final _random = Random();
   final _moveDirection = Vector2(0, 0);
   final _randomPosition = Vector2(0, 0);
@@ -37,9 +36,14 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
 
   @override
   Future<void> onLoad() async {
-    _spaceshipSprite = SpriteComponent(
+    final sprites = [
+      await Sprite.load('EnemyRed-1.png'),
+      await Sprite.load('EnemyRed-2.png'),
+    ];
+
+    _enemySprite = SpriteAnimationComponent(
+      animation: SpriteAnimation.spriteList(sprites, stepTime: 0.2),
       anchor: Anchor.center,
-      sprite: await Sprite.load('EnemyShip.png'),
       scale: _scale,
       children: [
         MoveEffect.by(
@@ -55,7 +59,7 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
         ),
       ],
     );
-    await add(_spaceshipSprite);
+    await add(_enemySprite);
     await add(
       PlayerDetector(
         onPlayerEntered: (value) => target = value,
@@ -65,9 +69,9 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
 
     await add(
       CircleHitbox(
-        radius: _spaceshipSprite.size.x * 0.5 * _scale.x,
+        radius: _enemySprite.size.x * 0.8 * _scale.x,
         anchor: Anchor.center,
-      ),
+      )..debugMode = true,
     );
     super.onLoad();
   }
@@ -83,7 +87,7 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
       final relativeVector = targetPosition - absoluteCenter;
       final direction = relativeVector.normalized();
 
-      if (relativeVector.length < _spaceshipSprite.size.x * _scale.x + 5) {
+      if (relativeVector.length < _enemySprite.size.x * _scale.x + 5) {
         _moveDirection.setZero();
       } else {
         _moveDirection.setFrom(direction);
@@ -96,8 +100,7 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
 
         final bullet = BulletComponent(
           owner: this,
-          position:
-              absolutePosition + direction * _spaceshipSprite.size.x * 0.4,
+          position: absolutePosition + direction * _enemySprite.size.x * 0.4,
           direction: direction,
           damage: _bulletDamage,
         );
@@ -125,24 +128,8 @@ class EnemyShipComponent extends PositionComponent with ParentIsA<Level> {
   }
 
   void takeBulletHit(double damage) {
-    _health = clampDouble(_health - damage, 0, 100);
+    _health = clampDouble(_health - damage, 0, 30);
     if (_health == 0) {
-      for (var i = 0; i < 2; i++) {
-        final spawnPosition =
-            position +
-            Vector2(
-              _random.nextDouble() * 50 - 25,
-              _random.nextDouble() * 50 - 25,
-            );
-        parent.add(
-          EnemyComponent(
-            patrolArea: patrolArea,
-            position: spawnPosition,
-            scale: Vector2.all(0.25),
-          ),
-        );
-      }
-
       add(
         ScaleEffect.to(
           Vector2.zero(),

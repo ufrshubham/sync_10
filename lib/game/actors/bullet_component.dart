@@ -4,9 +4,9 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:sync_10/game/actors/asteroid_component.dart';
+import 'package:sync_10/game/actors/enemy_component.dart';
 import 'package:sync_10/game/actors/enemy_ship_component.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
-import 'package:sync_10/game/actors/spaceship_component.dart';
 import 'package:sync_10/game/level.dart';
 
 class BulletComponent extends PositionComponent
@@ -71,6 +71,9 @@ class BulletComponent extends PositionComponent
     } else if (other is BulletComponent || other is PlanetComponent) {
       removeFromParent();
     } else if (owner is! EnemyShipComponent && other is EnemyShipComponent) {
+      other.takeBulletHit(damage);
+      removeFromParent();
+    } else if (owner is! EnemyComponent && other is EnemyComponent) {
       other.takeBulletHit(damage);
       removeFromParent();
     }
