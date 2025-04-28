@@ -6,10 +6,13 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sync_10/game/actors/asteroid_component.dart';
+import 'package:sync_10/game/actors/enemy_component.dart';
 import 'package:sync_10/game/actors/enemy_ship_component.dart';
 import 'package:sync_10/game/actors/planet_component.dart';
 import 'package:sync_10/game/actors/spaceship_component.dart';
+import 'package:sync_10/game/effect_components/blast_effect_component.dart';
 import 'package:sync_10/game/game.dart';
 import 'package:sync_10/game/pickup_components/energy_pickup_component.dart';
 import 'package:sync_10/game/pickup_components/fuel_pickup_component.dart';
@@ -114,7 +117,7 @@ class Level extends PositionComponent
             break;
 
           case 'Planet':
-            for (var i = 0; i < 50; ++i) {
+            for (var i = 0; i < 40; ++i) {
               final randomPosition =
                   spawnArea.position..add(
                     Vector2(
@@ -230,7 +233,7 @@ class Level extends PositionComponent
             break;
 
           case 'Enemy':
-            for (var i = 0; i < 5; ++i) {
+            for (var i = 0; i < 3; ++i) {
               final randomPosition =
                   spawnArea.position..add(
                     Vector2(
@@ -296,7 +299,69 @@ class Level extends PositionComponent
   @override
   void update(double dt) {
     super.update(dt);
-    _elapsedTime += dt;
-    ancestor.updateTimeElapsed(_elapsedTime);
+    if (ancestor.isLevelCompleted == false) {
+      _elapsedTime += dt;
+      ancestor.updateTimeElapsed(_elapsedTime);
+    }
+  }
+
+  Future<void> onLevelCompleted() {
+    ancestor.camera.moveTo(size * 0.5);
+    final effect = FunctionEffect(
+      (target, progress) {
+        ancestor.camera.viewfinder.zoom = clampDouble(1 - progress, 0.4, 1);
+      },
+      EffectController(duration: 0.5),
+      onComplete: () {
+        propagateToChildren<SpawnComponent>((spawner) {
+          spawner.removeFromParent();
+          return true;
+        });
+        propagateToChildren<EnemyShipComponent>((enemy) {
+          enemy.removeFromParent();
+          add(BlastEffectComponent(position: enemy.position));
+          return true;
+        });
+        propagateToChildren<EnemyComponent>((enemy) {
+          enemy.removeFromParent();
+          add(BlastEffectComponent(position: enemy.position));
+          return true;
+        });
+        propagateToChildren<AsteroidComponent>((asteroid) {
+          asteroid.removeFromParent();
+          add(BlastEffectComponent(position: asteroid.position));
+          return true;
+        });
+        propagateToChildren<PlanetComponent>((planet) {
+          planet.removeFromParent();
+          add(BlastEffectComponent(position: planet.position));
+          return true;
+        });
+        propagateToChildren<HealthPickupComponent>((health) {
+          health.removeFromParent();
+          return true;
+        });
+        propagateToChildren<FuelPickupComponent>((fuel) {
+          fuel.removeFromParent();
+          return true;
+        });
+        propagateToChildren<EnergyPickupComponent>((energy) {
+          energy.removeFromParent();
+          return true;
+        });
+        propagateToChildren<SyncronPickupComponent>((syncron) {
+          syncron.removeFromParent();
+          return true;
+        });
+
+        // propagateToChildren<StarNextComponent>((star) {
+        //   star.removeFromParent();
+        //   return true;
+        // });
+      },
+    );
+    add(effect);
+
+    return effect.completed;
   }
 }

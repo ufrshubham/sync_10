@@ -5,12 +5,14 @@ import 'package:sync_10/routes/game_play.dart';
 
 class HpyerspaceStreaksComponent extends PositionComponent
     with HasAncestor<Gameplay> {
-  HpyerspaceStreaksComponent({required super.size});
+  HpyerspaceStreaksComponent({required super.size, this.onComplete});
 
   late final FragmentShader _shader;
   final _paint = Paint();
 
   var _iTime = 0.0;
+
+  VoidCallback? onComplete;
 
   @override
   Future<void> onLoad() async {
@@ -28,8 +30,12 @@ class HpyerspaceStreaksComponent extends PositionComponent
 
   @override
   void update(double dt) {
-    _iTime += dt;
-    _shader.setFloat(2, _iTime);
+    if (_iTime < 1.8) {
+      _iTime += dt;
+      _shader.setFloat(2, _iTime);
+    } else {
+      onComplete?.call();
+    }
   }
 
   @override

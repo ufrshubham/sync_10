@@ -8,6 +8,8 @@ import 'package:sync_10/game/game.dart';
 import 'package:sync_10/game/hud_componenet.dart';
 import 'package:sync_10/game/input_component.dart';
 import 'package:sync_10/game/level.dart';
+import 'package:sync_10/game/shader_components/hyperspace_streaks_component.dart';
+import 'package:sync_10/game/shader_components/hyperspace_tunnel_component.dart';
 
 enum CameraType { primary, miniMap, debug }
 
@@ -32,6 +34,9 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
   final VoidCallback onGameOver;
 
   late final Level _level;
+  var isLevelCompleted = false;
+  var _isSwitchingLevels = false;
+  var _levelTime = 0;
 
   late final cameras = <CameraType, CameraComponent>{
     CameraType.primary: CameraComponent.withFixedResolution(
@@ -76,16 +81,14 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
           ? InputComponent(
             keyCallbacks: {
               LogicalKeyboardKey.keyP: onPausePressed,
-              LogicalKeyboardKey.keyC:
-                  () => onLevelCompleted.call(_level.levelTime),
+              LogicalKeyboardKey.keyC: () => updateSyncronCount(8),
               LogicalKeyboardKey.keyG: onGameOver,
             },
           )
           : GamepadComponenet(
             keyCallbacks: {
               LogicalKeyboardKey.keyP: onPausePressed,
-              LogicalKeyboardKey.keyC:
-                  () => onLevelCompleted.call(_level.levelTime),
+              LogicalKeyboardKey.keyC: () => updateSyncronCount(8),
               LogicalKeyboardKey.keyG: onGameOver,
             },
           );
@@ -152,17 +155,45 @@ class Gameplay extends Component with HasGameReference<Sync10Game> {
     _hud.updateTimeElapsed(timeElapsed);
   }
 
-  void updateSyncronCount(int syncronCollected) {
+  Future<void> updateSyncronCount(int syncronCollected) async {
     _hud.updateSyncronCount(syncronCollected);
 
     if (_level.syncronsToCollect == syncronCollected) {
-      onLevelCompleted.call(_level.levelTime);
-      _level.timeScale = 0;
+      // _level.timeScale = 0;
+      _levelTime = _level.levelTime;
       input.isListening = false;
+      await _level.onLevelCompleted();
+      isLevelCompleted = true;
     }
   }
 
   void updateSyncronToCollect(int syncronToCollect) {
     _hud.updateSyncronToCollect(syncronToCollect);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (isLevelCompleted) {
+      if (_isSwitchingLevels == false) {
+        _isSwitchingLevels = true;
+        fadeOut().then((_) {
+          _level.removeFromParent();
+          camera.viewfinder.zoom = 1.0;
+          camera.viewport.remove(_hud);
+          miniMap.removeFromParent();
+
+          fadeIn().then((_) {
+            final hyperspaceStreaks = HpyerspaceStreaksComponent(
+              size: _level.size,
+              onComplete: () {
+                onLevelCompleted.call(_levelTime);
+              },
+            );
+            world.add(hyperspaceStreaks);
+          });
+        });
+      }
+    }
   }
 }

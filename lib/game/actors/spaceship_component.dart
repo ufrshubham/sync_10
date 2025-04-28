@@ -57,7 +57,7 @@ class SpaceshipComponent extends PositionComponent
   static const _angularAcceleration = 1;
   static const _maxSlowDownAngularSpeed = 4.0;
   static const _maxSlowDownAngularAcceleration = 2.0;
-  static const _fireDelay = 0.5;
+  static const _fireDelay = 0.3;
   static const _fuelConsumption = 1.0;
   static const _fuelConsumptionBoost = 2.0;
   static const _energyConsumptionFire = 1.0;

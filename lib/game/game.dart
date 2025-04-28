@@ -156,7 +156,7 @@ class Sync10Game extends FlameGame
   }
 
   void _showLevelCompleteMenu(int levelTime) {
-    pauseEngine();
+    // pauseEngine();
     _router.pushNamed('${LevelComplete.id}/$levelTime');
   }
 
