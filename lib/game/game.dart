@@ -161,6 +161,7 @@ class Sync10Game extends FlameGame
   }
 
   void _showRetryMenu() {
+    pauseEngine();
     _router.pushNamed(RetryMenu.id);
   }
 

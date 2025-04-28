@@ -94,11 +94,7 @@ class SpaceshipComponent extends PositionComponent
     _updatePosition(dt);
     _scaleFlames();
     _handleFire(dt);
-    if (_isGameOver == false && _fuel == 0) {
-      _isGameOver = true;
-      ancestor.input.isListening = false;
-      ancestor.fadeOut().then((_) => ancestor.onGameOver());
-    }
+    _handleGameOver();
   }
 
   @override
@@ -381,6 +377,20 @@ class SpaceshipComponent extends PositionComponent
       _timeSinceLastFire = 0;
       _energy = clampDouble(_energy - _energyConsumptionFire, 0, 100);
       ancestor.updateEnergyBar(_energy);
+    }
+  }
+
+  void _handleGameOver() {
+    if (_isGameOver == false) {
+      if (_fuel == 0) {
+        _isGameOver = true;
+        ancestor.input.isListening = false;
+        ancestor.fadeOut().then((_) => ancestor.onGameOver());
+      } else if (_health == 0) {
+        _isGameOver = true;
+        ancestor.input.isListening = false;
+        ancestor.fadeOut().then((_) => ancestor.onGameOver());
+      }
     }
   }
 }
